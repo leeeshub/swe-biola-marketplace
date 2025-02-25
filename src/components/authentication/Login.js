@@ -1,9 +1,28 @@
 import React from 'react';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Typography, message } from 'antd';
 const { Text, Link } = Typography;
 
-const onFinish = (values) => {
-  console.log('Success:', values);
+const onFinish = async (values) => {
+  try {
+    const response = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values), // Send the form data (username and password)
+    });
+
+    const data = await response.json();
+
+    if (response.status === 200) {
+      message.success(data.message); // Show success message
+      // Do something with the user data (e.g., save in state, redirect)
+    } else {
+      message.error(data.message); // Show error message
+    }
+  } catch (error) {
+    message.error('An error occurred while logging in.');
+  }
 };
 
 const onFinishFailed = (errorInfo) => {
