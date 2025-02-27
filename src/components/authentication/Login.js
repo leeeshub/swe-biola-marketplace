@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Form, Input, Typography, message } from 'antd';
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const onFinish = async (values) => {
   try {
@@ -92,7 +93,7 @@ const Login = () => (
 
     <Text>
       Don’t have an account?
-      <Link> Sign Up</Link>
+      <Link to='/signup'> Sign Up</Link>
     </Text>
   </>
 );
