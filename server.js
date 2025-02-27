@@ -30,21 +30,35 @@ app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
     // Query the database
-    // TODO error check, right now if the username doesn't exist it crashes the server, which we probably don't want
-    database.query('SELECT password FROM UserProfiles WHERE email="' + username + '"', function (error, results, fields) {
+    try {
+        database.query('SELECT password FROM UserProfiles WHERE email="' + username + '"', function (err, results, fields) {
+            // Throw any error with the query
+            if (err) throw err;
 
-        // retrieve the first (and hopefully only) password for the email
-        const retrievedPassword = results[0].password
+            if (results.length < 1) {
+                res.status(401).json({ message: 'Invalid credentials' });
+            }
+            else {
+                // retrieve the first (and hopefully only) password for the email
+                const retrievedPassword = results[0].password
 
-        // If the password is equal to the retrieved passowrd, then it was a succesful login
-        if (password === retrievedPassword) {
-            res.status(200).json({ message: 'Login successful', user: username });
-        }
-        // Otherwise, the password or username was wrong
-        else {
-            res.status(401).json({ message: 'Invalid credentials' });
-        }
-    });
+                // If the password is equal to the retrieved passowrd, then it was a succesful login
+                if (password === retrievedPassword) {
+                    res.status(200).json({ message: 'Login successful', user: username });
+                }
+                // Otherwise, the password or username was wrong
+                else {
+                    res.status(401).json({ message: 'Invalid credentials' });
+                }
+            }
+            
+        });
+    }
+    catch(err) {
+        res.status(401).json({ message: 'Invalid credentials' });
+        console.log(err)
+    }
+    
 });
 
 app.listen(PORT, () => {
