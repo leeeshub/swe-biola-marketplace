@@ -70,19 +70,24 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/signup', (req, res) => {
+
+    // The body of the post request should hold the three elements of the new user
     const { name, email, password } = req.body;
-    // Query the database
+    
     try {
+        // Check if the email is used
         dbViewer.query('SELECT * FROM UserProfiles WHERE email="' + email + '"', function (err, results, fields) {
             if (err) throw err;
 
-            if (results.length > 1) {
+            // If there is a result, the email is already used
+            if (results.length > 0) {
                 res.status(401).json({ message: 'Email is already in use' });
             }
+            // Otherwise insert it into database
             else {
-                dbViewer.query('INSERT INTO UserProfiles (name, email, password) VALUES ("' + name + '", "' + email + '", "' + password + '")', function (err, results, fields) {
-                    // Throw any error with the query
+                dbWriter.query('INSERT INTO UserProfiles (name, email, password) VALUES ("' + name + '", "' + email + '", "' + password + '")', function (err, results, fields) {
                     if (err) throw err;
+                    // New user has been created
                     else {
                         res.status(200).json({ message: 'New user created' });
                     }
