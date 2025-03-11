@@ -63,3 +63,6 @@ CREATE TABLE IF NOT EXISTS Messages (
 
 CREATE USER IF NOT EXISTS 'viewer'@'localhost' IDENTIFIED BY 'password';
 GRANT SELECT ON * TO 'viewer'@'localhost';
+
+CREATE USER IF NOT EXISTS 'writer'@'localhost' IDENTIFIED BY 'password';
+GRANT INSERT ON * TO 'writer'@'localhost';
