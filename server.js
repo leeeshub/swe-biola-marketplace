@@ -153,6 +153,63 @@ app.post('/signup', (req, res) => {
 
 });
 
+app.post('/post', (req, res) => {
+
+    console.log("Post received")
+
+
+    // The body of the post should contain the information needed to create a new post
+    // Whenever the post page is created, this can be adjusted to match the actual request
+    const { session_id, post_title, price, type, category, item, description, author, isbn } = req.body;
+
+    try {
+        // Get the user from the user's session id
+        dbViewer.query('SELECT user_id FROM Sessions WHERE session_id="' + session_id + '"', function (err, results, fields) {
+
+            if (err) throw err;
+
+            // If there isn't any results, then the session ID is invalid
+            if (results.length < 1) {
+                res.status(401).json({ message: 'Session ID is invalid' });
+            }
+            // If the session ID is valid
+            else {
+                // Get the user ID
+                const user_id = results[0].user_id
+
+                // Insert the post into the Posts table
+                dbWriter.query('INSERT INTO Posts (user_id, post_title, price, type, category, status, created_at) VALUES ("' + user_id + '", "' + post_title + '", "' + price + '", "' + type + '", "' + category + '", "Listed", NOW() )', function (err, results, fields) {
+
+                    if (err) throw err;
+                    // Store the post ID that is inserted
+                    const post_id = results.insertId;
+
+                    // Insert into the Items table
+                    // If we choose to add multiple items for a post, then this will need to be changed
+                    dbWriter.query('INSERT INTO Items (post_id, item, description, author, isbn) VALUES ("' + post_id + '", "' + item + '", "' + description + '", "' + author + '", "' + isbn + '")', function (err, results, fields) {
+
+                        if (err) throw err;
+
+                        // Post succesfully created
+                        res.status(200).json({ message: 'New post created' });
+                    });
+                });
+            }
+            
+        });
+    }
+    // Error with the queries
+    catch (err) {
+        res.status(401).json({ message: 'Error in creating post' });
+        console.log(err)
+    }
+
+
+});
+
+// Example Post Post request body:
+// { "session_id": "c0e49364-0047-11f0-94ae-0a0027000014", "post_title": "New Post created by a Post request", "price": "10000.00", "type": "1", "category": "Stuff", "item": "The item of the post", "description": "This is the description", "author": "me", "isbn": "10234" }
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
