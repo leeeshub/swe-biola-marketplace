@@ -8,7 +8,16 @@ CREATE TABLE IF NOT EXISTS UserProfiles (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     
-    PRIMARY KEY (user_id)    
+    PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS Sessions (
+    session_id VARCHAR(36) NOT NULL,
+    user_id INT NOT NULL,
+    created_at VARCHAR(80),
+    
+    PRIMARY KEY (session_id),
+    FOREIGN KEY (user_id) REFERENCES UserProfiles(user_id)
 );
 
 CREATE TABLE IF NOT EXISTS Posts (
@@ -65,4 +74,4 @@ CREATE USER IF NOT EXISTS 'viewer'@'localhost' IDENTIFIED BY 'password';
 GRANT SELECT ON * TO 'viewer'@'localhost';
 
 CREATE USER IF NOT EXISTS 'writer'@'localhost' IDENTIFIED BY 'password';
-GRANT INSERT ON * TO 'writer'@'localhost';
+GRANT INSERT, UPDATE, SELECT ON * TO 'writer'@'localhost';

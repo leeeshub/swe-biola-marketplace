@@ -1,6 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\MySQL",
+    "\\public",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\authentication"
   ],
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }
