@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Input, Typography, Row, Col } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Text, Title } = Typography;
@@ -24,24 +24,13 @@ const SignUp = () => (
       autoComplete="off"
     >
       {/* Name Field */}
-      <Row>
-        <Col span={12}>
-          <Form.Item name="firstName" label="First Name"
-            rules={[{ required: true, message: 'Please enter your first name!' }]}>
-            <Input />
-          </Form.Item>
-        </Col>
+      <Form.Item name="name" label="Name"
+        rules={[{ required: true, message: 'Please enter your name!' }]}>
+        <Input />
+      </Form.Item>
 
-        <Col span={12}>
-          <Form.Item name="lastName" label="Last Name"
-            rules={[{ required: true, message: 'Please enter your last name!' }]}>
-            <Input />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Form.Item name="username" label="Username"
-        rules={[{ required: true, message: 'Please enter your username!' }]}>
+      <Form.Item name="email" label="Email"
+        rules={[{ required: true, message: 'Please enter your email!' }]}>
         <Input placeholder="e.g., john.doe@biola.edu" suffix={<Button type="primary">CONFIRM</Button>} />
       </Form.Item>
 
