@@ -40,7 +40,7 @@ app.post('/login', (req, res) => {
 
     // Query the database
     try {
-        dbViewer.query('SELECT password FROM UserProfiles WHERE email="' + email + '"', function (err, results, fields) {
+        dbViewer.query('SELECT UserProfiles.user_id, password, session_id, created_at FROM (UserProfiles LEFT JOIN Sessions ON UserProfiles.user_id = Sessions.user_id) WHERE email="' + email + '"', function (err, results, fields) {
             // Throw any error with the query
             if (err) throw err;
 
@@ -50,10 +50,42 @@ app.post('/login', (req, res) => {
             else {
                 // retrieve the first (and hopefully only) password for the email
                 const retrievedPassword = results[0].password
+                const retrievedUserID = results[0].user_id
+                const retrievedSessionID = results[0].session_id
+                const retrievedCreatedAt = results[0].created_at
+
 
                 // If the password is equal to the retrieved passowrd, then it was a succesful login
                 if (password === retrievedPassword) {
-                    res.status(200).json({ message: 'Login successful', user: email });
+                    if (retrievedSessionID === null) {
+                        dbViewer.query('SELECT UUID() AS sid', function (err, results, fields) {
+                            if (err) throw err;
+
+                            const session_id = results[0].sid;
+
+
+                            dbWriter.query('INSERT INTO Sessions (session_id, user_id, created_at) VALUES ("' + session_id + '", "' + retrievedUserID + '", "' + Date.now() + '")', function (err, results, fields) {
+                                if (err) throw err;
+                            });
+
+                            res.status(200).json({ message: 'Login successful', user: email, session: session_id });
+                        });
+                    }
+                    else if (Date.now() - retrievedCreatedAt > 86400000) {
+                        dbViewer.query('SELECT UUID() AS sid', function (err, results, fields) {
+                            if (err) throw err;
+
+                            const session_id = results[0].sid;
+                            dbWriter.query('UPDATE Sessions SET session_id = "' + session_id + '", created_at = "' + Date.now() + '" WHERE user_id = "' + retrievedUserID + '"', function (err, results, fields) {
+                                if (err) throw err;
+                            });
+
+                            res.status(200).json({ message: 'Login successful', user: email, session: session_id });
+                        });
+                    }
+                    else {
+                        res.status(200).json({ message: 'Login successful', user: email, session: retrievedSessionID });
+                    }
                 }
                 // Otherwise, the password or username was wrong
                 else {
