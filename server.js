@@ -38,17 +38,18 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-    // Query the database
     try {
+        // Query for the user that has the email
         dbViewer.query('SELECT UserProfiles.user_id, password, session_id, created_at FROM (UserProfiles LEFT JOIN Sessions ON UserProfiles.user_id = Sessions.user_id) WHERE email="' + email + '"', function (err, results, fields) {
             // Throw any error with the query
             if (err) throw err;
 
+            // If results are less than 1, then there is no user with that email
             if (results.length < 1) {
                 res.status(401).json({ message: 'Invalid credentials' });
             }
             else {
-                // retrieve the first (and hopefully only) password for the email
+                // store the results of the first (and hopefully only) query for that email
                 const retrievedPassword = results[0].password
                 const retrievedUserID = results[0].user_id
                 const retrievedSessionID = results[0].session_id
@@ -57,33 +58,48 @@ app.post('/login', (req, res) => {
 
                 // If the password is equal to the retrieved passowrd, then it was a succesful login
                 if (password === retrievedPassword) {
+                    // If the session ID is null, then the user has no session ID
                     if (retrievedSessionID === null) {
-                        dbViewer.query('SELECT UUID() AS sid', function (err, results, fields) {
+                        // Since they have no session ID, create a new one
+                        dbViewer.query('SELECT UUID() AS session_id', function (err, results, fields) {
+                            // Throw any error with the query
                             if (err) throw err;
 
-                            const session_id = results[0].sid;
+                            // Store the session ID
+                            const session_id = results[0].session_id;
 
-
+                            // Insert the session ID into the Sessions table
                             dbWriter.query('INSERT INTO Sessions (session_id, user_id, created_at) VALUES ("' + session_id + '", "' + retrievedUserID + '", "' + Date.now() + '")', function (err, results, fields) {
+                                // Throw any error with the query
                                 if (err) throw err;
                             });
 
+                            // The login was succesful, return the session ID
                             res.status(200).json({ message: 'Login successful', user: email, session: session_id });
                         });
                     }
+                    // If they have a session ID, but the ID has expired (86400000 is 1 day in miliseconds)
                     else if (Date.now() - retrievedCreatedAt > 86400000) {
-                        dbViewer.query('SELECT UUID() AS sid', function (err, results, fields) {
+                        // Create a new session ID
+                        dbViewer.query('SELECT UUID() AS session_id', function (err, results, fields) {
+                            // Throw any error with the query
                             if (err) throw err;
 
-                            const session_id = results[0].sid;
+                            // Store the session ID
+                            const session_id = results[0].session_id;
+
+                            // Update the Sessions table with the new session ID for that user
                             dbWriter.query('UPDATE Sessions SET session_id = "' + session_id + '", created_at = "' + Date.now() + '" WHERE user_id = "' + retrievedUserID + '"', function (err, results, fields) {
                                 if (err) throw err;
                             });
 
+                            // The login was succesful, return the new session ID
                             res.status(200).json({ message: 'Login successful', user: email, session: session_id });
                         });
                     }
+                    // They already have a session ID
                     else {
+                        // The login was succesful, return their session ID
                         res.status(200).json({ message: 'Login successful', user: email, session: retrievedSessionID });
                     }
                 }
@@ -95,11 +111,14 @@ app.post('/login', (req, res) => {
             
         });
     }
+    // If there was any errors with one of the queries, then just return a failed login to the user
     catch(err) {
         res.status(401).json({ message: 'Invalid credentials' });
         console.log(err)
     }
 });
+
+
 
 app.post('/signup', (req, res) => {
 
@@ -123,7 +142,6 @@ app.post('/signup', (req, res) => {
                     else {
                         res.status(200).json({ message: 'New user created' });
                     }
-
                 });
             }
         });
