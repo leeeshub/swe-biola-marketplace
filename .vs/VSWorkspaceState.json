@@ -7,6 +7,6 @@
     "\\src\\components",
     "\\src\\components\\authentication"
   ],
-  "SelectedNode": "\\.gitignore",
+  "SelectedNode": "\\src\\components\\authentication\\Login.js",
   "PreviewInSolutionExplorer": false
 }

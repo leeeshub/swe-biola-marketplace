@@ -3,32 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\Login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\authentication\\Login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\MySQL\\createDatabase.sql||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MySQL\\createDatabase.sql||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\Login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\authentication\\Login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\SignUp.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\authentication\\SignUp.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\MySQL\\TestingValues.sql||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MySQL\\TestingValues.sql||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.test.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\App.test.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\MySQL\\createDatabase.sql||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MySQL\\createDatabase.sql||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\SignUp.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\components\\authentication\\SignUp.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,50 +38,60 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "package.json",
-              "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\package.json",
-              "RelativeDocumentMoniker": "package.json",
-              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\package.json",
-              "RelativeToolTip": "package.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-03-13T19:40:41.238Z",
-              "EditorCaption": ""
+              "DocumentIndex": 4,
+              "Title": "App.test.js",
+              "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.test.js",
+              "RelativeDocumentMoniker": "src\\App.test.js",
+              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.test.js",
+              "RelativeToolTip": "src\\App.test.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-03-18T21:15:20.761Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.js",
+              "RelativeDocumentMoniker": "src\\App.js",
+              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\App.js",
+              "RelativeToolTip": "src\\App.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-03-18T21:10:18.874Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "SignUp.js",
               "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\SignUp.js",
               "RelativeDocumentMoniker": "src\\components\\authentication\\SignUp.js",
               "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\SignUp.js",
               "RelativeToolTip": "src\\components\\authentication\\SignUp.js",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAA/AAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABYAAAALAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-03-11T21:27:44.456Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-11T21:27:44.456Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Login.js",
               "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\Login.js",
               "RelativeDocumentMoniker": "src\\components\\authentication\\Login.js",
               "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\src\\components\\authentication\\Login.js",
               "RelativeToolTip": "src\\components\\authentication\\Login.js",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAA+AAAA",
+              "ViewState": "AQIAAHcAAAAAAAAAAAAAAIMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-03-11T21:27:29.708Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "TestingValues.sql",
               "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\MySQL\\TestingValues.sql",
               "RelativeDocumentMoniker": "MySQL\\TestingValues.sql",
@@ -89,12 +99,11 @@
               "RelativeToolTip": "MySQL\\TestingValues.sql",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-03-11T21:13:28.494Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-11T21:13:28.494Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "createDatabase.sql",
               "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\MySQL\\createDatabase.sql",
               "RelativeDocumentMoniker": "MySQL\\createDatabase.sql",
@@ -102,21 +111,7 @@
               "RelativeToolTip": "MySQL\\createDatabase.sql",
               "ViewState": "AQIAADQAAAAAAAAAAAAAAEwAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-03-11T21:11:25.557Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\.gitignore",
-              "RelativeDocumentMoniker": ".gitignore",
-              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\.gitignore",
-              "RelativeToolTip": ".gitignore",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAABkAAAAEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-03-11T21:08:00.597Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-11T21:11:25.557Z"
             },
             {
               "$type": "Document",
@@ -124,9 +119,9 @@
               "Title": "server.js",
               "DocumentMoniker": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\server.js",
               "RelativeDocumentMoniker": "server.js",
-              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\server.js",
-              "RelativeToolTip": "server.js",
-              "ViewState": "AQIAAIEAAAAAAAAAAAAcwEkAAABKAAAA",
+              "ToolTip": "C:\\Users\\kauai\\OneDrive\\Documents\\swe-biola-marketplace\\server.js*",
+              "RelativeToolTip": "server.js*",
+              "ViewState": "AQIAACAAAAAAAAAAAAAiwH0AAACdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-02-25T22:37:08.772Z",
               "EditorCaption": ""
