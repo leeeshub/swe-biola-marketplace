@@ -246,6 +246,69 @@ app.post('/post', (req, res) => {
 // Example Post Post request body:
 // { "session_id": "c0e49364-0047-11f0-94ae-0a0027000014", "post_title": "New Post created by a Post request", "price": "10000.00", "type": "1", "category": "Stuff", "item": "The item of the post", "description": "This is the description", "author": "me", "isbn": "10234" }
 
+app.post('/post-edit', (req, res) => {
+
+    console.log("Post received")
+
+
+    // The body of the post should contain the information needed to create a new post
+    // Whenever the post page is created, this can be adjusted to match the actual request
+    const { session_id, post_id, post_title, price, type, category, item, description, author, isbn } = req.body;
+
+    try {
+        // Get the user from the user's session id
+        dbViewer.query('SELECT user_id FROM Sessions WHERE session_id="' + session_id + '"', function (err, results, fields) {
+
+            if (err) throw err;
+
+            // If there isn't any results, then the session ID is invalid
+            if (results.length < 1) {
+                res.status(401).json({ message: 'Session ID is invalid' });
+            }
+            // If the session ID is valid
+            else {
+                // Get the user ID
+                const user_id = results[0].user_id
+
+                dbViewer.query('SELECT user_id FROM Posts WHERE post_id ="' + user_id + '"', function (err, results, fields) {
+                    // If there is a post with the id
+                    if (results.length > 0) {
+                        // If it is the correct user
+                        if (user_id === results[0].user_id) {
+                            dbWriter.query('UPDATE Posts SET post_title = "' + post_title + '", price = "' + price + '", type = "' + type + '", category = "' + category + '" WHERE post_id = "' + post_id + '"', function (err, results, fields) {
+                                if (err) throw err;
+
+                                // Update the Items table
+                                // If we choose to add multiple items for a post, then this will need to be changed
+                                dbWriter.query('UPDATE Items SET item = "' + item + '", description = "' + description + '", author = "' + author + '", isbn = "' + isbn + '" WHERE post_id = "' + post_id + '"', function (err, results, fields) {
+
+                                    if (err) throw err;
+
+                                    // Post succesfully edited
+                                    res.status(200).json({ message: 'Post has been edited' });
+                                });
+                            });
+                        }
+                        // Else, a user is trying to edit someone elses post
+                        else {
+                            res.status(401).json({ message: "Post doesn't belong to user" });
+                        }
+                    }
+                    // Else, there is no post with the id
+                    else {
+                        res.status(401).json({ message: "Post doesn't exist" });
+                    }
+                });
+            }
+        });
+    }
+    // Error with the queries
+    catch (err) {
+        res.status(401).json({ message: 'Error in creating post' });
+        console.log(err)
+    }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
