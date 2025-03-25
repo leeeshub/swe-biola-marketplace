@@ -43,6 +43,10 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 
 function checkSession(session_id) {
     try {
+        if (session_id == "undefined") {
+            return 0;
+        }
+
         // Query to see if the session ID is for a valid user
         dbViewer.query('SELECT user_id, created_at FROM (Sessions) WHERE session_id="' + session_id + '"', function (err, results, fields) {
             // Throw any error with the query
@@ -74,6 +78,8 @@ function checkSession(session_id) {
         console.log(err)
         return 0;
     }
+
+    
 }
 
 
@@ -168,6 +174,7 @@ app.post('/checksession', (req, res) => {
     try {
         const retrievedUserID = checkSession(session_id);
 
+        console.log(retrievedUserID);
         if (retrievedUserID !== 0) {
             res.status(200).json({ message: 'Valid Session_ID', user_id: retrievedUserID });
 
@@ -202,9 +209,16 @@ app.post('/signup', (req, res) => {
                 dbWriter.query('INSERT INTO UserProfiles (name, email, password) VALUES ("' + name + '", "' + email + '", "' + password + '")', function (err, results, fields) {
                     if (err) throw err;
                     // New user has been created
-                    else {
-                        res.status(200).json({ message: 'New user created' });
-                    }
+                    dbViewer.query('SELECT UUID() AS session_id', function (err, results, fields) {
+                        // Throw any error with the query
+                        if (err) throw err;
+
+                        // Store the session ID
+                        const session_id = results[0].session_id;
+
+                        res.status(200).json({ message: 'New user created', session: session_id });
+                    });
+                    
                 });
             }
         });
