@@ -74,4 +74,7 @@ CREATE USER IF NOT EXISTS 'viewer'@'localhost' IDENTIFIED BY 'password';
 GRANT SELECT ON * TO 'viewer'@'localhost';
 
 CREATE USER IF NOT EXISTS 'writer'@'localhost' IDENTIFIED BY 'password';
-GRANT INSERT, UPDATE, SELECT ON * TO 'writer'@'localhost';
+GRANT UPDATE, INSERT, SELECT ON * TO 'writer'@'localhost';
+
+CREATE USER IF NOT EXISTS 'destroyerOfData'@'localhost' IDENTIFIED BY 'password';
+GRANT DELETE, SELECT ON * TO 'destroyerOfData'@'localhost';

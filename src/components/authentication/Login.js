@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Typography, message } from 'antd';
 import Cookies from 'js-cookie';
 
+let navigate;
+
 const { Text } = Typography;
 
 const onFinish = async (values) => {
@@ -23,6 +25,7 @@ const onFinish = async (values) => {
 
         Cookies.set('Session_ID', data.session, { expires: 1 })
 
+        CheckSessionID(navigate);
     } else {
       message.error(data.message); // Show error message
     }
@@ -37,15 +40,15 @@ const onFinishFailed = (errorInfo) => {
 
 const Login = () => {
 
-    // This is the React datatype that let me redirect the page
-    const navigation = useNavigate();
+    // This is the React datatype that to redirect the page
+    navigate = useNavigate();
 
     // On the page load
     useEffect(() => {
         // console.log('Test');
         // If the user has a session id cookie, then check if it is valid
         if (Cookies.get("Session_ID") !== undefined) {
-            checkSessionID(navigation);
+            CheckSessionID(navigate);
         }
     });
 
@@ -120,7 +123,9 @@ const Login = () => {
 }
 
 
-const checkSessionID = async (nav) => {
+const CheckSessionID = async (nav) => {
+
+
 
     // Send a HTTPS Post request to the server, with the body being the session id cookie
     const response = await fetch('http://localhost:5000/checkSession', {
@@ -135,7 +140,7 @@ const checkSessionID = async (nav) => {
     if (response.status === 200) {
         console.log("Switching")
         // This is where it would redirect, since we don't have a main page the testing was done with the signup link
-        //nav("/signup");
+        nav("/");
     }
 }
 

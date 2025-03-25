@@ -20,7 +20,12 @@ var dbWriter = mysql.createConnection({
     password: "password",
     database: "StudentMarketplace"
 });
-
+var dbDeleter = mysql.createConnection({
+    host: "localhost",
+    user: "destroyerOfData",
+    password: "password",
+    database: "StudentMarketplace"
+});
 
 
 dbViewer.connect(function (err) {
@@ -33,6 +38,45 @@ dbViewer.connect(function (err) {
 // Middleware
 app.use(cors()); // Allow cross-origin requests
 app.use(bodyParser.json()); // Parse incoming JSON requests
+
+
+
+function checkSession(session_id) {
+    try {
+        // Query to see if the session ID is for a valid user
+        dbViewer.query('SELECT user_id, created_at FROM (Sessions) WHERE session_id="' + session_id + '"', function (err, results, fields) {
+            // Throw any error with the query
+            if (err) throw err;
+
+            // If results are less than 1, then there is no user with that session ID
+            if (results.length < 1) {
+                return 0;
+            }
+            else {
+                // store the results of the first (and hopefully only) query for that session
+                const retrievedUserID = results[0].user_id
+                const retrievedCreatedAt = results[0].created_at
+
+                // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in miliseconds)
+                if (Date.now() - retrievedCreatedAt < 86400000) {
+                    return retrievedUserID;
+                }
+                // If it has expired
+                else {
+                    return 0;
+                }
+            }
+        });
+
+    }
+    // If there was any errors with one of the queries, then just return a failed login to the user
+    catch (err) {
+        console.log(err)
+        return 0;
+    }
+}
+
+
 
 // Simple login endpoint
 app.post('/login', (req, res) => {
@@ -122,32 +166,15 @@ app.post('/checksession', (req, res) => {
     const { session_id } = req.body;
 
     try {
-        // Query to see if the session ID is for a valid user
-        dbViewer.query('SELECT user_id, created_at FROM (Sessions) WHERE session_id="' + session_id + '"', function (err, results, fields) {
-            // Throw any error with the query
-            if (err) throw err;
+        const retrievedUserID = checkSession(session_id);
 
-            // If results are less than 1, then there is no user with that session ID
-            if (results.length < 1) {
-                res.status(401).json({ message: 'Not a valid session' });
-            }
-            else {
-                // store the results of the first (and hopefully only) query for that session
-                const retrievedUserID = results[0].user_id
-                const retrievedCreatedAt = results[0].created_at
+        if (retrievedUserID !== 0) {
+            res.status(200).json({ message: 'Valid Session_ID', user_id: retrievedUserID });
 
-                // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in miliseconds)
-                if (Date.now() - retrievedCreatedAt < 86400000) {  
-                    res.status(200).json({ message: 'Valid Session_ID', user_id: retrievedUserID });
-                }
-                // If it has expired
-                else
-                {
-                    res.status(401).json({ message: 'Not a valid session' });
-                }
-            }
-        });
-
+        }
+        else {
+            res.status(401).json({ message: 'Not a valid session' });
+        }
     }
     // If there was any errors with one of the queries, then just return a failed login to the user
     catch (err) {
@@ -248,8 +275,7 @@ app.post('/post', (req, res) => {
 
 app.post('/post-edit', (req, res) => {
 
-    console.log("Post received")
-
+    console.log("Post edit receieved")
 
     // The body of the post should contain the information needed to create a new post
     // Whenever the post page is created, this can be adjusted to match the actual request
@@ -270,7 +296,7 @@ app.post('/post-edit', (req, res) => {
                 // Get the user ID
                 const user_id = results[0].user_id
 
-                dbViewer.query('SELECT user_id FROM Posts WHERE post_id ="' + user_id + '"', function (err, results, fields) {
+                dbViewer.query('SELECT user_id FROM Posts WHERE post_id ="' + post_id + '"', function (err, results, fields) {
                     // If there is a post with the id
                     if (results.length > 0) {
                         // If it is the correct user
@@ -307,6 +333,57 @@ app.post('/post-edit', (req, res) => {
         res.status(401).json({ message: 'Error in creating post' });
         console.log(err)
     }
+});
+
+app.post('/post-delete', (req, res) => {
+
+    const { session_id, post_id } = req.body;
+
+    try {
+        const retrievedUserID = checkSession(session_id);
+
+        if (retrievedUserID !== 0) {
+
+            dbViewer.query('SELECT user_id FROM Posts WHERE post_id ="' + post_id + '"', function (err, results, fields) {
+                // If there is a post with the id
+                if (results.length > 0) {
+                    // If it is the correct user
+                    if (retrievedUserID === results[0].user_id) {
+                        // Delete the post and related items
+                        dbDeleter.query('DELETE FROM Posts WHERE post_id = ""', function (err, results, fields) {
+                            if (err) throw err;
+
+                            dbDeleter.query('DELETE FROM Items WHERE post_id = ""', function (err, results, fields) {
+                                if (err) throw err;
+                                res.status(200).json({ message: "Post has been destroyed" });
+                            });
+                        });
+                    }
+                    // Else, a user is trying to edit someone elses post
+                    else {
+                        res.status(401).json({ message: "Post doesn't belong to user" });
+                    }
+                }
+                // Else, there is no post with the id
+                else {
+                    res.status(401).json({ message: "Post doesn't exist" });
+                }
+            });
+
+            res.status(200).json({ message: 'Valid Session_ID', user_id: retrievedUserID });
+
+        }
+        else {
+            res.status(401).json({ message: 'Not a valid session' });
+        }
+    }
+    // If there was any errors with one of the queries, then just return a failed login to the user
+    catch (err) {
+        res.status(401).json({ message: 'Not a valid session' });
+        console.log(err)
+    }
+
+
 });
 
 
