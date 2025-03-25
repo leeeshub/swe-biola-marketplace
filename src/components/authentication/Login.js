@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Form, Input, Typography, message } from 'antd';
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const onFinish = async (values) => {
   try {
@@ -16,7 +17,10 @@ const onFinish = async (values) => {
 
     if (response.status === 200) {
       message.success(data.message); // Show success message
-      // Do something with the user data (e.g., save in state, redirect)
+        // Do something with the user data (e.g., save in state, redirect)
+
+        Cookies.set('Session_ID', data.session, { expires: 1 })
+
     } else {
       message.error(data.message); // Show error message
     }
@@ -40,36 +44,36 @@ const Login = () => (
         LOGIN
     </Typography.Title>
 
-    <Form
-      name="basic"
-      labelCol={{
-        span: 24,
-      }}
-      wrapperCol={{
-        span: 16,
-      }}
-      style={{
-        maxWidth: 600,
-      }}
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      <Form.Item
-        label="User ID"
-        name="username"
+            <Form
+                name="basic"
+                labelCol={{
+                    span: 24,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                style={{
+                    maxWidth: 600,
+                }}
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+            >
+                <Form.Item
+                    label="Email"
+                    name="email"
 
-        rules={[
-          {
-            message: 'Please input your username!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+                    rules={[
+                        {
+                            message: 'Please input your email!',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
       <Form.Item
         label="Password"
@@ -92,7 +96,7 @@ const Login = () => (
 
     <Text>
       Don’t have an account?
-      <Link> Sign Up</Link>
+      <Link to='/signup'> Sign Up</Link>
     </Text>
   </>
 );
