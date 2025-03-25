@@ -1,6 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Typography, message } from 'antd';
+import Cookies from 'js-cookie';
+
 const { Text } = Typography;
 
 const onFinish = async (values) => {
@@ -33,16 +35,31 @@ const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
 
-const Login = () => (
-  <>
-    <Typography.Title
-        level={1}
-        style={{
-          margin: 0,
-        }}
-      >
-        LOGIN
-    </Typography.Title>
+const Login = () => {
+
+    // This is the React datatype that let me redirect the page
+    const navigation = useNavigate();
+
+    // On the page load
+    useEffect(() => {
+        // console.log('Test');
+        // If the user has a session id cookie, then check if it is valid
+        if (Cookies.get("Session_ID") !== undefined) {
+            checkSessionID(navigation);
+        }
+    });
+
+    // Create the webpage
+    return (
+        <>
+            <Typography.Title
+                level={1}
+                style={{
+                    margin: 0,
+                }}
+            >
+                LOGIN
+            </Typography.Title>
 
             <Form
                 name="basic"
@@ -75,30 +92,51 @@ const Login = () => (
                     <Input />
                 </Form.Item>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            message: 'Please input your password!',
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                        {
+                            message: 'Please input your password!',
+                        },
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
 
-      <Form.Item label={null}>
-        <Button type="primary" htmlType="submit">
-          Login
-        </Button>
-      </Form.Item>
-    </Form>
+                <Form.Item label={null}>
+                    <Button type="primary" htmlType="submit">
+                        Login
+                    </Button>
+                </Form.Item>
+            </Form>
 
-    <Text>
-      Don’t have an account?
-      <Link to='/signup'> Sign Up</Link>
-    </Text>
-  </>
-);
+            <Text>
+                Don’t have an account?
+                <Link to='/signup'> Sign Up</Link>
+            </Text>
+        </>
+    );
+}
+
+
+const checkSessionID = async (nav) => {
+
+    // Send a HTTPS Post request to the server, with the body being the session id cookie
+    const response = await fetch('http://localhost:5000/checkSession', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session_id: Cookies.get("Session_ID") }),
+    });
+
+    // If the session id was valid, then it would redirect from the main page
+    if (response.status === 200) {
+        console.log("Switching")
+        // This is where it would redirect, since we don't have a main page the testing was done with the signup link
+        //nav("/signup");
+    }
+}
 
 export default Login;
