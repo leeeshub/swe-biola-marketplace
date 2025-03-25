@@ -47,7 +47,7 @@ const Login = () => {
     useEffect(() => {
         // console.log('Test');
         // If the user has a session id cookie, then check if it is valid
-        if (Cookies.get("Session_ID") !== undefined) {
+        if (Cookies.get("Session_ID") !== "undefined") {
             CheckSessionID(navigate);
         }
     });
@@ -124,8 +124,6 @@ const Login = () => {
 
 
 const CheckSessionID = async (nav) => {
-
-
 
     // Send a HTTPS Post request to the server, with the body being the session id cookie
     const response = await fetch('http://localhost:5000/checkSession', {
