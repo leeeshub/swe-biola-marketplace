@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Typography, message } from 'antd';
 import Cookies from 'js-cookie';
 
-
 const { Text } = Typography;
 
 const onFinish = async (values) => {
