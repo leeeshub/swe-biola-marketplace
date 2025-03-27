@@ -40,96 +40,81 @@ const onFinishFailed = (errorInfo) => {
 };
 
 const SignUp = () => {
-  // This is the React datatype that to redirect the page
-  navigate = useNavigate();
+    // This is the React datatype that to redirect the page
+    navigate = useNavigate();
 
-  // On the page load
-  useEffect(() => {
-    // console.log('Test');
-    // If the user has a session id cookie, then check if it is valid
-    if (Cookies.get("Session_ID") !== "undefined") {
-      CheckSessionID(navigate);
-    }
-  });
+    // On the page load
+    useEffect(() => {
+        // console.log('Test');
+        // If the user has a session id cookie, then check if it is valid
+        if (Cookies.get("Session_ID") !== undefined) {
+            CheckSessionID(navigate);
+        }
+    });
+    
+    return (
+        <div >
+            <Title>SIGN UP</Title>
 
-  return (
-    <div>
-      <Title>SIGN UP</Title>
+            <Form
+                name="signup"
+                layout="vertical"
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+            >
+                {/* Name Field */}
+                <Form.Item name="name" label="Name"
+                    rules={[{ required: true, message: 'Please enter your name!' }]}>
+                    <Input />
+                </Form.Item>
 
-      <Form
-        name="signup"
-        layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        {/* Name Field */}
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: "Please enter your name!" }]}
-        >
-          <Input />
-        </Form.Item>
+                <Form.Item name="email" label="Email"
+                    rules={[{ required: true, message: 'Please enter your email!' }]}>
+                    <Input placeholder="e.g., john.doe@biola.edu" suffix={<Button type="primary">CONFIRM</Button>} />
+                </Form.Item>
 
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[{ required: true, message: "Please enter your email!" }]}
-        >
-          <Input
-            placeholder="e.g., john.doe@biola.edu"
-            suffix={<Button type="primary">CONFIRM</Button>}
-          />
-        </Form.Item>
+                <Form.Item name="password" label="Password"
+                    rules={[
+                        { required: true, message: 'Please enter your password' },
+                        {
+                            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/,
+                            message: 'Password must be at least 8 characters, include at least 1 letter, 1 number, and 1 special character (!@#$%^&*()).',
+                        },
+                    ]}
+                >
+                    <Input.Password suffix={<Button type="primary">CONFIRM</Button>} />
+                </Form.Item>
 
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[
-            { required: true, message: "Please enter your password" },
-            {
-              pattern:
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/,
-              message:
-                "Password must be at least 8 characters, include at least 1 letter, 1 number, and 1 special character (!@#$%^&*()).",
-            },
-          ]}
-        >
-          <Input.Password suffix={<Button type="primary">CONFIRM</Button>} />
-        </Form.Item>
+                <Form.Item name="passwordConfirm" label="Password Confirmation"
+                    rules={[
+                        { required: true, message: 'Please confirm your password' },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('Passwords do not match'));
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
 
-        <Form.Item
-          name="passwordConfirm"
-          label="Password Confirmation"
-          rules={[
-            { required: true, message: "Please confirm your password" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error("Passwords do not match"));
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Sign Up
+                    </Button>
+                </Form.Item>
+            </Form>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Sign Up
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <Text>
-        Already have an account? <Link to="/login">Login</Link>
-      </Text>
-    </div>
-  );
-};
+            <Text>
+                Already have an account? <Link to="/login">Login</Link>
+            </Text>
+        </div>
+    );
+}
 
 const CheckSessionID = async (nav) => {
   // Send a HTTPS Post request to the server, with the body being the session id cookie

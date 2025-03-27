@@ -39,86 +39,87 @@ const onFinishFailed = (errorInfo) => {
 };
 
 const Login = () => {
-  // This is the React datatype that to redirect the page
-  navigate = useNavigate();
+    // This is the React datatype that to redirect the page
+    navigate = useNavigate();
 
-  // On the page load
-  useEffect(() => {
-    // console.log('Test');
-    // If the user has a session id cookie, then check if it is valid
-    if (Cookies.get("Session_ID") !== "undefined") {
-      CheckSessionID(navigate);
-    }
-  });
+    // On the page load
+    useEffect(() => {
+        // console.log('Test');
+        // If the user has a session id cookie, then check if it is valid
+        if (Cookies.get("Session_ID") !== undefined) {
+            CheckSessionID(navigate);
+        }
+    });
 
-  // Create the webpage
-  return (
-    <>
-      <Typography.Title
-        level={1}
-        style={{
-          margin: 0,
-        }}
-      >
-        LOGIN
-      </Typography.Title>
+    // Create the webpage
+    return (
+        <>
+            <Typography.Title
+                level={1}
+                style={{
+                    margin: 0,
+                }}
+            >
+                LOGIN
+            </Typography.Title>
 
-      <Form
-        name="basic"
-        labelCol={{
-          span: 24,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              message: "Please input your email!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+            <Form
+                name="basic"
+                labelCol={{
+                    span: 24,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                style={{
+                    maxWidth: 600,
+                }}
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
+            >
+                <Form.Item
+                    label="Email"
+                    name="email"
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              message: "Please input your password!",
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+                    rules={[
+                        {
+                            message: 'Please input your email!',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
 
-        <Form.Item label={null}>
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                        {
+                            message: 'Please input your password!',
+                        },
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
 
-      <Text>
-        Don’t have an account?
-        <Link to="/signup"> Sign Up</Link>
-      </Text>
-    </>
-  );
-};
+                <Form.Item label={null}>
+                    <Button type="primary" htmlType="submit">
+                        Login
+                    </Button>
+                </Form.Item>
+            </Form>
+
+            <Text>
+                Don’t have an account?
+                <Link to='/signup'> Sign Up</Link>
+            </Text>
+        </>
+    );
+}
 
 const CheckSessionID = async (nav) => {
   // Send a HTTPS Post request to the server, with the body being the session id cookie
