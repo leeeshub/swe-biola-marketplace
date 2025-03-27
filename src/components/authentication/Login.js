@@ -47,7 +47,7 @@ const Login = () => {
     useEffect(() => {
         // console.log('Test');
         // If the user has a session id cookie, then check if it is valid
-        if (Cookies.get("Session_ID") !== "undefined") {
+        if (Cookies.get("Session_ID") !== undefined) {
             CheckSessionID(navigate);
         }
     });

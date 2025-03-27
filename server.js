@@ -41,45 +41,43 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 
 
 
-function checkSession(session_id) {
-    try {
-        if (session_id == "undefined") {
-            return 0;
-        }
+async function checkSession(session_id) {
+    return new Promise((resolve, reject) => {
+        try {
 
-        // Query to see if the session ID is for a valid user
-        dbViewer.query('SELECT user_id, created_at FROM (Sessions) WHERE session_id="' + session_id + '"', function (err, results, fields) {
-            // Throw any error with the query
-            if (err) throw err;
-
-            // If results are less than 1, then there is no user with that session ID
-            if (results.length < 1) {
-                return 0;
-            }
-            else {
-                // store the results of the first (and hopefully only) query for that session
-                const retrievedUserID = results[0].user_id
-                const retrievedCreatedAt = results[0].created_at
-
-                // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in miliseconds)
-                if (Date.now() - retrievedCreatedAt < 86400000) {
-                    return retrievedUserID;
+            // Query to see if the session ID is for a valid user
+            dbViewer.query('SELECT user_id, created_at FROM Sessions WHERE session_id="' + session_id + '"', function (err, results, fields) {
+                // Throw any error with the query
+                if (err) {
+                    reject(err); // Reject promise with error
+                    return;
                 }
-                // If it has expired
+
+                // If results are less than 1, then there is no user with that session ID
+                if (results.length < 1) {
+                    return resolve(-1); // Resolve with 0 if no valid session found
+                }
                 else {
-                    return 0;
+                    // store the results of the first (and hopefully only) query for that session
+                    const retrievedUserID = results[0].user_id;
+                    const retrievedCreatedAt = results[0].created_at;
+
+                    // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in milliseconds)
+                    if (Date.now() - retrievedCreatedAt < 86400000) {
+                        return resolve(retrievedUserID); // Resolve with user_id if session is valid
+                    }
+                    // If it has expired
+                    else {
+                        return resolve(-1); // Resolve with 0 if session is expired
+                    }
                 }
-            }
-        });
+            });
 
-    }
-    // If there was any errors with one of the queries, then just return a failed login to the user
-    catch (err) {
-        console.log(err)
-        return 0;
-    }
-
-    
+        } catch (err) {
+            console.log(err);
+            return reject(err); // Reject promise with error
+        }
+    });
 }
 
 
@@ -168,11 +166,11 @@ app.post('/login', (req, res) => {
     }
 });
 
-app.post('/checksession', (req, res) => {
+app.post('/checksession', async function(req, res) {
     const { session_id } = req.body;
 
     try {
-        const retrievedUserID = checkSession(session_id);
+        const retrievedUserID = await checkSession(session_id);
 
         console.log(retrievedUserID);
         if (retrievedUserID !== 0) {
@@ -208,6 +206,8 @@ app.post('/signup', (req, res) => {
             else {
                 dbWriter.query('INSERT INTO UserProfiles (name, email, password) VALUES ("' + name + '", "' + email + '", "' + password + '")', function (err, results, fields) {
                     if (err) throw err;
+                    const retrievedUserID = results.insertId;
+
                     // New user has been created
                     dbViewer.query('SELECT UUID() AS session_id', function (err, results, fields) {
                         // Throw any error with the query
@@ -216,9 +216,13 @@ app.post('/signup', (req, res) => {
                         // Store the session ID
                         const session_id = results[0].session_id;
 
-                        res.status(200).json({ message: 'New user created', session: session_id });
+                        dbWriter.query('INSERT INTO Sessions (session_id, user_id, created_at) VALUES ("' + session_id + '", "' + retrievedUserID + '", "' + Date.now() + '")', function (err, results, fields) {
+                            // Throw any error with the query
+                            if (err) throw err;
+
+                            res.status(200).json({ message: 'New user created', session: session_id });
+                        });
                     });
-                    
                 });
             }
         });
