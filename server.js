@@ -39,7 +39,6 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 async function checkSession(session_id) {
     return new Promise((resolve, reject) => {
         try {
-
             // Query to see if the session ID is for a valid user
             dbViewer.query('SELECT user_id, created_at FROM Sessions WHERE session_id="' + session_id + '"', function (err, results, fields) {
                 // Throw any error with the query
@@ -202,19 +201,19 @@ app.post('/checksession', async function(req, res) {
     try {
         const retrievedUserID = await checkSession(session_id);
 
-    console.log(retrievedUserID);
-    if (retrievedUserID !== 0) {
-      res
-        .status(200)
-        .json({ message: "Valid Session_ID", user_id: retrievedUserID });
-    } else {
-      res.status(401).json({ message: "Not a valid session" });
+        console.log(retrievedUserID);
+        if (retrievedUserID !== 0) {
+            res
+                .status(200)
+                .json({ message: "Valid Session_ID", user_id: retrievedUserID });
+        } else {
+            res.status(401).json({ message: "Not a valid session" });
+        }
+    } catch (err) {
+        // If there was any errors with one of the queries, then just return a failed login to the user
+        res.status(401).json({ message: "Not a valid session" });
+        console.log(err);
     }
-  } catch (err) {
-    // If there was any errors with one of the queries, then just return a failed login to the user
-    res.status(401).json({ message: "Not a valid session" });
-    console.log(err);
-  }
 });
 
 app.post("/signup", (req, res) => {
@@ -272,19 +271,24 @@ app.post("/signup", (req, res) => {
 app.post("/post", (req, res) => {
   console.log("Post received");
 
+    console.log(req.body)
   // The body of the post should contain the information needed to create a new post
   // Whenever the post page is created, this can be adjusted to match the actual request
-  const {
-    session_id,
-    post_title,
+    const {
+        session_id,
+    title,
     price,
-    type,
     category,
-    item,
-    description,
-    author,
-    isbn,
-  } = req.body;
+      description,
+      
+    } = req.body;
+
+    console.log(title);
+    let type = 1;
+    let item = title;
+    let author = "NULL";
+    let isbn = "NULL";
+    
 
   try {
     // Get the user from the user's session id
@@ -307,7 +311,7 @@ app.post("/post", (req, res) => {
             'INSERT INTO Posts (user_id, post_title, price, type, category, status, created_at) VALUES ("' +
               user_id +
               '", "' +
-              post_title +
+              title +
               '", "' +
               price +
               '", "' +
@@ -331,9 +335,9 @@ app.post("/post", (req, res) => {
                   description +
                   '", "' +
                   author +
-                  '", "' +
+                  '", ' +
                   isbn +
-                  '")',
+                  ')',
                 function (err, results, fields) {
                   if (err) throw err;
 
