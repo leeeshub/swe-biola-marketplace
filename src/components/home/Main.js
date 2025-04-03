@@ -165,8 +165,8 @@ const Main = () => {
                                     >
                                         <img
                                             alt="placeholder"
-                                            src="https://img.icons8.com/ios/100/image.png"
-                                            style={{ width: 50, opacity: 0.5 }}
+                                            src = {item.image_url}
+                                            style={{ width: "fit-content", opacity: 0.75 }}
                                         />
                                     </div>
                                 }
@@ -175,7 +175,7 @@ const Main = () => {
                                     <Text type="secondary" style={{ fontSize: 12 }}>
                                         {item.name} • {formatter.format(new Date(item.created_at))}
                                     </Text>
-                                    <Text strong>{item.title}</Text>
+                                    <Text strong>{item.post_title}</Text>
                                     <Text type="secondary">{item.description}</Text>
                                 </Space>
                             </Card>

@@ -2,6 +2,7 @@ const express = require("express"); // web framework for Node.js to handle HTTP 
 const cors = require("cors"); // allows for Cross-Origin Resource Sharing (allows frontend to communicate with backend on different ports)
 const bodyParser = require("body-parser"); // parses incoming requests with JSON
 const mysql = require("mysql2"); // module to connect to database
+const fs = require("fs")
 
 const app = express();
 const PORT = 4000;
@@ -271,7 +272,7 @@ app.post("/signup", (req, res) => {
 app.post("/post", (req, res) => {
   console.log("Post received");
 
-    console.log(req.body)
+    //console.log(req.body)
   // The body of the post should contain the information needed to create a new post
   // Whenever the post page is created, this can be adjusted to match the actual request
     const {
@@ -279,7 +280,8 @@ app.post("/post", (req, res) => {
     title,
     price,
     category,
-      description,
+        description,
+      images,
       
     } = req.body;
 
@@ -304,7 +306,9 @@ app.post("/post", (req, res) => {
         // If the session ID is valid
         else {
           // Get the user ID
-          const user_id = results[0].user_id;
+            const user_id = results[0].user_id;
+
+
 
           // Insert the post into the Posts table
           dbWriter.query(
@@ -340,6 +344,20 @@ app.post("/post", (req, res) => {
                   ')',
                 function (err, results, fields) {
                   if (err) throw err;
+
+                    //console.log(images);
+                    if (images) {
+                        const url = `src/Images/${images[0].uid}.${images[0].type.split('/')[1]}`
+                        console.log(url);
+
+                        fs.writeFileSync(url, images[0].thumbUrl);
+
+                        
+
+                        dbWriter.query(`INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${images[0].name}", "${url}")`, function (err, results, fields) {
+                            if (err) throw err
+                        });
+                    }
 
                   // Post succesfully created
                   res.status(200).json({ message: "New post created" });
@@ -530,9 +548,20 @@ app.post("/get", async function (req, res) {
 
         dbViewer.query(
             //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
-            `SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)`,
+            `SELECT name, post_title, price, created_at, description, image_url FROM (((Posts LEFT JOIN Items ON Posts.post_id = Items.post_id) LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)) LEFT JOIN Images ON Posts.post_id = Images.post_id`,
             function (err, results, fields) {
                 if (err) throw err;
+
+                for (var i in results) {
+                    //console.log(results[i].image_url);
+                    if (results[i].image_url !== null) {
+                        results[i].image_url = fs.readFileSync(results[i].image_url, 'utf8');
+                        //console.log(results[i].image_url);
+                    }
+                    else {
+                        results[i].image_url = "https://img.icons8.com/ios/100/image.png"
+                    }
+                }
 
                 res.status(200).json({ message: "Selected", response: results });
             });

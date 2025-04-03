@@ -7,7 +7,8 @@
     "\\src\\components",
     "\\src\\components\\authentication",
     "\\src\\components\\crud",
-    "\\src\\components\\home"
+    "\\src\\components\\home",
+    "\\src\\Images"
   ],
   "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
