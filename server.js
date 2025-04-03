@@ -202,7 +202,7 @@ app.post('/checksession', async function(req, res) {
         const retrievedUserID = await checkSession(session_id);
 
         console.log(retrievedUserID);
-        if (retrievedUserID !== 0) {
+        if (retrievedUserID > 0) {
             res
                 .status(200)
                 .json({ message: "Valid Session_ID", user_id: retrievedUserID });
@@ -521,6 +521,30 @@ app.post("/post-delete", (req, res) => {
     console.log(err);
   }
 });
+
+
+app.post("/get", async function (req, res) {
+    const { session_id } = req.body;
+    try {
+        const retrievedUserID = await checkSession(session_id);
+
+        dbViewer.query(
+            //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
+            `SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)`,
+            function (err, results, fields) {
+                if (err) throw err;
+
+                res.status(200).json({ message: "Selected", response: results });
+            });
+
+    } catch (err) {
+        // If there was any errors with one of the queries, then just return a failed login to the user
+        res.status(401).json({ message: "Error in retrieving posts" });
+        console.log(err);
+    }
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
