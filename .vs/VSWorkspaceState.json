@@ -5,8 +5,10 @@
     "\\public",
     "\\src",
     "\\src\\components",
-    "\\src\\components\\authentication"
+    "\\src\\components\\authentication",
+    "\\src\\components\\crud",
+    "\\src\\components\\home"
   ],
-  "SelectedNode": "\\src\\components\\authentication\\Login.js",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }

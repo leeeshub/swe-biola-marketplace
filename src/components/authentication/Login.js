@@ -134,7 +134,7 @@ const CheckSessionID = async (nav) => {
   // If the session id was valid, then it would redirect from the main page
   if (response.status === 200) {
     console.log("Switching");
-    // This is where it would redirect, since we don't have a main page the testing was done with the signup link
+    // This is where it would redirect
     nav("/");
   }
 };

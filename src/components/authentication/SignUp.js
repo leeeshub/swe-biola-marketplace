@@ -118,7 +118,7 @@ const SignUp = () => {
 
 const CheckSessionID = async (nav) => {
   // Send a HTTPS Post request to the server, with the body being the session id cookie
-  const response = await fetch("http://localhost:5000/checkSession", {
+  const response = await fetch("http://localhost:4000/checkSession", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -129,7 +129,7 @@ const CheckSessionID = async (nav) => {
   // If the session id was valid, then it would redirect from the main page
   if (response.status === 200) {
     console.log("Switching");
-    // This is where it would redirect, since we don't have a main page the testing was done with the signup link
+    // This is where it would redirect
     nav("/");
   }
 };
