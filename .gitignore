@@ -24,3 +24,7 @@ yarn-error.log*
 
 # Visual studio files aren't needed
 /.vs
+
+
+# Images
+/src/images

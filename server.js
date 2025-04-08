@@ -1,4 +1,7 @@
 const express = require("express"); // web framework for Node.js to handle HTTP requests
+const multer = require("multer");
+const path = require("path");
+const url = require('url');
 const cors = require("cors"); // allows for Cross-Origin Resource Sharing (allows frontend to communicate with backend on different ports)
 const bodyParser = require("body-parser"); // parses incoming requests with JSON
 const mysql = require("mysql2"); // module to connect to database
@@ -32,10 +35,29 @@ dbViewer.connect(function (err) {
   console.log("Connected!");
 });
 
+
+// Set up multer storage (same as before)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'src/images'); // Save to the 'public/images' folder
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, Date.now() + ext); // Add a timestamp to the filename to avoid conflicts
+    }
+});
+// Initialize multer
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});
+
 // Middleware
 app.use(cors()); // Allow cross-origin requests
-app.use(bodyParser.json()); // Parse incoming JSON requests
+app.use(bodyParser.json({ limit: '20mb' })); // Parse incoming JSON requests
 
+// To get images
+app.use('/images', express.static(path.join(__dirname, 'src', 'images')));
 
 async function checkSession(session_id) {
     return new Promise((resolve, reject) => {
@@ -269,11 +291,16 @@ app.post("/signup", (req, res) => {
   }
 });
 
-app.post("/post", (req, res) => {
+app.post("/post", upload.single("images"), (req, res) => {
   console.log("Post received");
 
-    //console.log(req.body)
-  // The body of the post should contain the information needed to create a new post
+    if (req.fileValidationError) {
+        return res.status(400).json({ message: req.fileValidationError });
+    }
+    console.log(req.file);
+
+
+    // The body of the post should contain the information needed to create a new post
   // Whenever the post page is created, this can be adjusted to match the actual request
     const {
         session_id,
@@ -346,17 +373,13 @@ app.post("/post", (req, res) => {
                   if (err) throw err;
 
                     //console.log(images);
-                    if (images) {
-                        const url = `src/Images/${images[0].uid}.${images[0].type.split('/')[1]}`
-                        console.log(url);
+                    if (req.file) {
 
-                        fs.writeFileSync(url, images[0].thumbUrl);
-
-                        
-
-                        dbWriter.query(`INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${images[0].name}", "${url}")`, function (err, results, fields) {
+                        dbWriter.query(`INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${req.file.originalname}", "${req.file.filename}")`, function (err, results, fields) {
                             if (err) throw err
+
                         });
+
                     }
 
                   // Post succesfully created
@@ -555,7 +578,9 @@ app.post("/get", async function (req, res) {
                 for (var i in results) {
                     //console.log(results[i].image_url);
                     if (results[i].image_url !== null) {
-                        results[i].image_url = fs.readFileSync(results[i].image_url, 'utf8');
+
+                        results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
+                        console.log(results[i].image_url);
                         //console.log(results[i].image_url);
                     }
                     else {
@@ -572,6 +597,10 @@ app.post("/get", async function (req, res) {
         console.log(err);
     }
 });
+
+
+
+
 
 
 

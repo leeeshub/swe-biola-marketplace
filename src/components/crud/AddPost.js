@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Input, InputNumber, Button, Upload, Select, message } from 'antd';
 import { UploadOutlined, DollarOutlined } from '@ant-design/icons';
@@ -11,25 +11,27 @@ const { Option } = Select;
 
 const AddPost = () => {
     const [form] = Form.useForm();
+    const [fileList, setFileList] = useState([]);
 
     const navigate = useNavigate();;
 
     const onFinish = async (values) => {
 
-        console.log(values["images"]);
+        const formData = new FormData();
+        formData.append('session_id', Cookies.get('Session_ID'));
+        formData.append('title', values.title);
+        formData.append('price', values.price);
+        formData.append('category', values.category);
+        formData.append('description', values.description);
 
-        values["session_id"] = Cookies.get("Session_ID");
-
-        //values["images"] = "";
-
+        if (fileList.length > 0) {
+            formData.append('images', fileList[0].originFileObj); // Add the image file
+        }
 
         try {
             const response = await fetch("http://localhost:4000/post", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values), // Send the form data (username and password)
+                body: formData,
             });
 
 
@@ -97,12 +99,21 @@ const AddPost = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Upload Image(s)"
+                    label="Upload Image"
                     name="images"
                     valuePropName="fileList"
                     getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}
                 >
-                    <Upload name="images" action="http://localhost:4000/upload" headers={{ session_id: Cookies.get("Session_ID") }} accept=".png, .jpg"  listType="picture" beforeUpload={() => false} multiple>
+                    <Upload name="images" accept=".png, .jpg" listType="picture" maxCount={1} beforeUpload={() => false}
+                        fileList={fileList}
+                        onChange={({ fileList }) => {
+                        // Ensure each file has originFileObj
+                        const updatedList = fileList.map(file => ({
+                            ...file,
+                            originFileObj: file.originFileObj || file,
+                        }));
+                        setFileList(updatedList);
+                    }}>
                         <Button icon={<UploadOutlined />}>Upload</Button>
                     </Upload>
                 </Form.Item>

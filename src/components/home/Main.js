@@ -166,7 +166,7 @@ const Main = () => {
                                         <img
                                             alt="placeholder"
                                             src = {item.image_url}
-                                            style={{ width: "fit-content", opacity: 0.75 }}
+                                            style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
                                         />
                                     </div>
                                 }
