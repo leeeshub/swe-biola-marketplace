@@ -5,14 +5,13 @@ import { UploadOutlined, DollarOutlined } from '@ant-design/icons';
 import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 import Cookies from "js-cookie";
 
-
 const { TextArea } = Input;
 const { Option } = Select;
 
 const AddPost = () => {
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState([]);
-
+  
     const navigate = useNavigate();;
 
     const onFinish = async (values) => {
@@ -34,6 +33,8 @@ const AddPost = () => {
                 body: formData,
             });
 
+  const onFinish = async (values) => {
+    values["session_id"] = Cookies.get("Session_ID");
 
             const data = await response.json();
 
@@ -87,7 +88,17 @@ const AddPost = () => {
                 <Form.Item
                     label="Price"
                     name="price"
-                    rules={[{ required: true, message: 'Please enter a price' }]}
+                    rules={[{ required: true, message: 'Please enter a price' },
+                           {
+                              validator: (_, value) => {
+                              if (value && value > 1000000) {
+                                return Promise.reject(
+                                  new Error("Price cannot exceed $1,000,000")
+                                );
+                              }
+                              return Promise.resolve();
+                            },
+                          ]}
                 >
                     <InputNumber
                         style={{ width: '100%' }}
@@ -139,21 +150,21 @@ const AddPost = () => {
 };
 
 const CheckSessionID = async (nav) => {
-    // Send a HTTPS Post request to the server, with the body being the session id cookie
-    const response = await fetch("http://localhost:4000/checkSession", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ session_id: Cookies.get("Session_ID") }),
-    });
+  // Send a HTTPS Post request to the server, with the body being the session id cookie
+  const response = await fetch("http://localhost:4000/checkSession", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ session_id: Cookies.get("Session_ID") }),
+  });
 
-    // If the session id was valid, then it would redirect from the main page
-    if (response.status === 200) {
-        console.log("Switching");
-        // This is where it would redirect, since we don't have a main page the testing was done with the signup link
-        nav("/");
-    }
+  // If the session id was valid, then it would redirect from the main page
+  if (response.status === 200) {
+    console.log("Switching");
+    // This is where it would redirect, since we don't have a main page the testing was done with the signup link
+    nav("/");
+  }
 };
 
 export default AddPost;
