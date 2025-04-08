@@ -7,9 +7,8 @@
     "\\src\\components",
     "\\src\\components\\authentication",
     "\\src\\components\\crud",
-    "\\src\\components\\home",
-    "\\src\\Images"
+    "\\src\\components\\home"
   ],
-  "SelectedNode": "\\server.js",
+  "SelectedNode": "\\.gitignore",
   "PreviewInSolutionExplorer": false
 }
