@@ -154,8 +154,8 @@ const Main = () => {
                   >
                     <img
                       alt="placeholder"
-                      src="https://img.icons8.com/ios/100/image.png"
-                      style={{ width: 50, opacity: 0.5 }}
+                      src = {item.image_url}
+                      style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
                     />
                   </div>
                 }
@@ -180,13 +180,6 @@ const Main = () => {
                 marginTop: "2rem",
               }}
             >
-              No items found.
-            </Text>
-          </Col>
-        )}
-      </Row>
-    </div>
-  );
 };
 
 export default Main;
