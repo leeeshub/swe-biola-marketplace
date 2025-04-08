@@ -33,9 +33,6 @@ const AddPost = () => {
                 body: formData,
             });
 
-  const onFinish = async (values) => {
-    values["session_id"] = Cookies.get("Session_ID");
-
             const data = await response.json();
 
             if (response.status === 200) {
@@ -89,15 +86,16 @@ const AddPost = () => {
                     label="Price"
                     name="price"
                     rules={[{ required: true, message: 'Please enter a price' },
-                           {
-                              validator: (_, value) => {
-                              if (value && value > 1000000) {
-                                return Promise.reject(
-                                  new Error("Price cannot exceed $1,000,000")
-                                );
-                              }
-                              return Promise.resolve();
+                        {
+                            validator: (_, value) => {
+                                if (value && value > 1000000) {
+                                    return Promise.reject(
+                                        new Error("Price cannot exceed $1,000,000")
+                                    );
+                                }
+                                return Promise.resolve();
                             },
+                        },
                           ]}
                 >
                     <InputNumber
