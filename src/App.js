@@ -5,6 +5,7 @@ import Login from "./components/authentication/Login";
 import SignUp from "./components/authentication/SignUp";
 import AddPost from './components/crud/AddPost';
 import EditPost from './components/crud/EditPost';
+import Info from './components/crud/Info';
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         <Route path="signup" element={<SignUp />} />
         <Route path="add-post" element={<AddPost />} />
         <Route path="update" element={<EditPost />} />
-        {/* need a post id for the update page */}
+        {/* need a post id for the update/info page */}
+        <Route path="info" element={<Info />} />
       </Routes>
     </BrowserRouter>
   );
