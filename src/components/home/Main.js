@@ -11,6 +11,7 @@ import {
     Button,
     message,
 } from "antd";
+import { Link } from 'react-router-dom';
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 
@@ -58,7 +59,7 @@ const Main = () => {
             }
         };
         getPosts();
-    }, []);
+    }, []); // Don't remove these brackets even though it has squiggly lines under it
 
     const handleFilterChange = (e) => {
         setSelectedFilter(e.key);
@@ -140,34 +141,36 @@ const Main = () => {
                 {filteredData.length > 0 ? (
                     filteredData.map((item) => (
                         <Col key={item.id} xs={24} sm={12} md={8}>
-                            <Card
-                                hoverable
-                                cover={
-                                    <div
-                                        style={{
-                                            height: 150,
-                                            backgroundColor: "#ccc",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <img
-                                            alt="placeholder"
-                                            src={item.image_url}
-                                            style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
-                                        />
-                                    </div>
-                                }
-                            >
-                                <Space direction="vertical" size={4}>
-                                    <Text type="secondary" style={{ fontSize: 12 }}>
-                                        {item.name} • {formatter.format(new Date(item.created_at))}
-                                    </Text>
-                                    <Text strong>{item.post_title}</Text>
-                                    <Text type="secondary">{item.description}</Text>
-                                </Space>
-                            </Card>
+                            <Link to={"/info/" + item.post_id}>
+                                <Card
+                                    hoverable
+                                    cover={
+                                        <div
+                                            style={{
+                                                height: 150,
+                                                backgroundColor: "#ccc",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <img
+                                                alt="placeholder"
+                                                src={item.image_url}
+                                                style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
+                                            />
+                                        </div>
+                                    }
+                                >
+                                    <Space direction="vertical" size={4}>
+                                        <Text type="secondary" style={{ fontSize: 12 }}>
+                                            {item.name} • {formatter.format(new Date(item.created_at))}
+                                        </Text>
+                                        <Text strong>{item.post_title}</Text>
+                                        <Text type="secondary">{item.description}</Text>
+                                    </Space>
+                                </Card>
+                            </Link>
                         </Col>
                     ))
                 ) : (

@@ -122,6 +122,7 @@ const Login = () => {
 }
 
 const CheckSessionID = async (nav) => {
+    console.log(Cookies.get("Session_ID"))
   // Send a HTTPS Post request to the server, with the body being the session id cookie
   const response = await fetch("http://localhost:4000/checkSession", {
     method: "POST",
@@ -130,6 +131,7 @@ const CheckSessionID = async (nav) => {
     },
     body: JSON.stringify({ session_id: Cookies.get("Session_ID") }),
   });
+    console.log(response);
 
   // If the session id was valid, then it would redirect from the main page
   if (response.status === 200) {
