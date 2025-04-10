@@ -18,6 +18,7 @@ function App() {
         <Route path="update" element={<EditPost />} />
         {/* need a post id for the update/info page */}
         <Route path="info" element={<Info />} />
+        <Route path="info/:post" element={<Info />} />
       </Routes>
     </BrowserRouter>
   );
