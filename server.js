@@ -415,23 +415,30 @@ app.post("/post", upload.single("images"), (req, res) => {
 // Example Post Post request body:
 // { "session_id": "c0e49364-0047-11f0-94ae-0a0027000014", "post_title": "New Post created by a Post request", "price": "10000.00", "type": "1", "category": "Stuff", "item": "The item of the post", "description": "This is the description", "author": "me", "isbn": "10234" }
 
-app.post("/post-edit", (req, res) => {
-    console.log("Post edit receieved");
+app.post("/post-edit", upload.single("images"), (req, res) => {
+    console.log("Post edit");
+
+    if (req.fileValidationError) {
+        return res.status(400).json({ message: req.fileValidationError });
+    }
+    console.log(req.file);
+
 
     // The body of the post should contain the information needed to create a new post
     // Whenever the post page is created, this can be adjusted to match the actual request
     const {
         session_id,
-        post_id,
-        post_title,
+        title,
         price,
-        type,
         category,
-        item,
         description,
-        author,
-        isbn,
+        images,
+        post_id
+
     } = req.body;
+
+    let type = 1;
+    let item = title;
 
     try {
         // Get the user from the user's session id
@@ -440,6 +447,7 @@ app.post("/post-edit", (req, res) => {
             function (err, results, fields) {
                 if (err) throw err;
 
+                console.log(session_id);
                 // If there isn't any results, then the session ID is invalid
                 if (results.length < 1) {
                     res.status(401).json({ message: "Session ID is invalid" });
@@ -458,7 +466,7 @@ app.post("/post-edit", (req, res) => {
                                 if (user_id === results[0].user_id) {
                                     dbWriter.query(
                                         'UPDATE Posts SET post_title = "' +
-                                        post_title +
+                                        title +
                                         '", price = "' +
                                         price +
                                         '", type = "' +
@@ -478,10 +486,6 @@ app.post("/post-edit", (req, res) => {
                                                 item +
                                                 '", description = "' +
                                                 description +
-                                                '", author = "' +
-                                                author +
-                                                '", isbn = "' +
-                                                isbn +
                                                 '" WHERE post_id = "' +
                                                 post_id +
                                                 '"',
@@ -610,7 +614,6 @@ app.post("/get", async function (req, res) {
         console.log(err);
     }
 });
-
 app.post("/getDetailed", async function (req, res) {
     const { post_id } = req.body;
     try {
