@@ -7,6 +7,7 @@ import AddPost from './components/crud/AddPost';
 import EditPost from './components/crud/EditPost';
 import Info from './components/crud/Info';
 import Header from './components/common/Header';
+import Profile from './components/crud/Profile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="signup" element={<SignUp />} />
         <Route path="add-post" element={<AddPost />} />
         <Route path="update" element={<EditPost />} />
+        <Route path="profile" element={<Profile />} />
         {/* need a post id for the update/info page */}
         <Route path="info" element={<Info />} />
         <Route path="info/:post" element={<Info />} />
