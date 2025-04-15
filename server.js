@@ -613,6 +613,39 @@ app.post("/get", async function (req, res) {
   }
 });
 
+app.post("/getProfile", async function (req, res) {
+    const { session_id } = req.body;
+    try {
+        const retrievedUserID = await checkSession(session_id);
+
+        dbViewer.query(
+            //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
+            `SELECT name, Posts.post_id, post_title, price, created_at, description, image_url FROM (((Posts LEFT JOIN Items ON Posts.post_id = Items.post_id) LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)) LEFT JOIN Images ON Posts.post_id = Images.post_id WHERE Posts.user_id = ${retrievedUserID}`,
+            function (err, results, fields) {
+                if (err) throw err;
+
+                for (var i in results) {
+                    //console.log(results[i].image_url);
+                    if (results[i].image_url !== null) {
+
+                        results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
+                        //console.log(results[i].image_url);
+                    }
+                    else {
+                        results[i].image_url = "https://img.icons8.com/ios/100/image.png"
+                    }
+                }
+
+                res.status(200).json({ message: "Selected", response: results });
+            });
+
+    } catch (err) {
+        // If there was any errors with one of the queries, then just return a failed login to the user
+        res.status(401).json({ message: "Error in retrieving posts" });
+        console.log(err);
+    }
+});
+
 app.post("/getDetailed", async function (req, res) {
   const { post_id } = req.body;
   try {
