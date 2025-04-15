@@ -1,0 +1,18 @@
+.login-btn {
+  background-color: #CF182F !important;
+  color: white !important;
+  font-weight: bold !important;
+  width: 5.2rem;
+}
+
+.signup-btn {
+  background-color: #231D1D !important;
+  color: white !important;
+  font-weight: bold !important;
+  width: 6rem;
+}
+
+.tab {
+  font-weight: bold !important;
+  color: #231D1D !important;
+}
