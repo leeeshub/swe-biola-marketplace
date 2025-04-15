@@ -6,10 +6,12 @@ import SignUp from "./components/authentication/SignUp";
 import AddPost from './components/crud/AddPost';
 import EditPost from './components/crud/EditPost';
 import Info from './components/crud/Info';
+import Header from './components/common/Header';
 
 function App() {
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="login" element={<Login />} />
