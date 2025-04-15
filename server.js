@@ -594,7 +594,6 @@ app.post("/get", async function (req, res) {
                     if (results[i].image_url !== null) {
 
                         results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
-                        console.log(results[i].image_url);
                         //console.log(results[i].image_url);
                     }
                     else {
@@ -626,7 +625,6 @@ app.post("/getDetailed", async function (req, res) {
                     if (results[i].image_url !== null) {
 
                         results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
-                        console.log(results[i].image_url);
                         //console.log(results[i].image_url);
                     }
                     else {
