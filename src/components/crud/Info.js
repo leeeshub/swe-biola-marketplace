@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Button, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { BrowserRouter as Router, Route, Link, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, useParams, useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 
 
 const Info = () => {
     const [data, setData] = useState(null);
     
-    const post_id = useParams().post;
+    let post_id = useParams().post;
+
+    const nav = useNavigate();
+
+
+    if (post_id === undefined) {
+        console.log("Lacking a post_id");
+        nav('/');
+        post_id = 1;
+
+    }
     console.log(post_id);
 
     useEffect(() => {
