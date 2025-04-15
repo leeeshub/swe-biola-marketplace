@@ -412,26 +412,30 @@ app.post("/post", upload.single("images"), (req, res) => {
     }
 });
 
-// Example Post Post request body:
-// { "session_id": "c0e49364-0047-11f0-94ae-0a0027000014", "post_title": "New Post created by a Post request", "price": "10000.00", "type": "1", "category": "Stuff", "item": "The item of the post", "description": "This is the description", "author": "me", "isbn": "10234" }
+app.post("/post-edit", upload.single("images"), (req, res) => {
+    console.log("Post edit");
 
-app.post("/post-edit", (req, res) => {
-    console.log("Post edit receieved");
+    if (req.fileValidationError) {
+        return res.status(400).json({ message: req.fileValidationError });
+    }
+    console.log(req.file);
+
 
     // The body of the post should contain the information needed to create a new post
     // Whenever the post page is created, this can be adjusted to match the actual request
     const {
         session_id,
-        post_id,
-        post_title,
+        title,
         price,
-        type,
         category,
-        item,
         description,
-        author,
-        isbn,
+        images,
+        post_id
+
     } = req.body;
+
+    let type = 1;
+    let item = title;
 
     try {
         // Get the user from the user's session id
@@ -440,6 +444,7 @@ app.post("/post-edit", (req, res) => {
             function (err, results, fields) {
                 if (err) throw err;
 
+                console.log(session_id);
                 // If there isn't any results, then the session ID is invalid
                 if (results.length < 1) {
                     res.status(401).json({ message: "Session ID is invalid" });
@@ -458,7 +463,7 @@ app.post("/post-edit", (req, res) => {
                                 if (user_id === results[0].user_id) {
                                     dbWriter.query(
                                         'UPDATE Posts SET post_title = "' +
-                                        post_title +
+                                        title +
                                         '", price = "' +
                                         price +
                                         '", type = "' +
@@ -478,10 +483,6 @@ app.post("/post-edit", (req, res) => {
                                                 item +
                                                 '", description = "' +
                                                 description +
-                                                '", author = "' +
-                                                author +
-                                                '", isbn = "' +
-                                                isbn +
                                                 '" WHERE post_id = "' +
                                                 post_id +
                                                 '"',
@@ -489,6 +490,18 @@ app.post("/post-edit", (req, res) => {
                                                     if (err) throw err;
 
                                                     // Post succesfully edited
+
+                                                    if (req.file) {
+                                                        dbDeleter.query(`DELETE FROM Images WHERE post_id = ${post_id}`, function (err, results, fields) {
+                                                            if (err) throw err;
+                                                            dbWriter.query(`INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${req.file.originalname}", "${req.file.filename}")`, function (err, results, fields) {
+                                                                if (err) throw err;
+
+                                                            });
+                                                        });
+                                                        
+                                                    }
+
                                                     res
                                                         .status(200)
                                                         .json({ message: "Post has been edited" });
@@ -577,7 +590,6 @@ app.post("/post-delete", (req, res) => {
     }
 });
 
-
 app.post("/get", async function (req, res) {
     const { session_id } = req.body;
     try {
@@ -594,7 +606,6 @@ app.post("/get", async function (req, res) {
                     if (results[i].image_url !== null) {
 
                         results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
-                        console.log(results[i].image_url);
                         //console.log(results[i].image_url);
                     }
                     else {
@@ -626,7 +637,6 @@ app.post("/getDetailed", async function (req, res) {
                     if (results[i].image_url !== null) {
 
                         results[i].image_url = new URL(results[i].image_url, 'http://localhost:4000/images/').href;
-                        console.log(results[i].image_url);
                         //console.log(results[i].image_url);
                     }
                     else {
@@ -643,10 +653,6 @@ app.post("/getDetailed", async function (req, res) {
         console.log(err);
     }
 });
-
-
-
-
 
 
 

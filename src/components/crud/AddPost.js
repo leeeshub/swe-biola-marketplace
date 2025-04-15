@@ -133,8 +133,11 @@ const AddPost = () => {
                     rules={[{ required: true, message: 'Please select a category' }]}
                 >
                     <Select placeholder="Select a category">
-                        <Option value="electronics">Clothes</Option>
+                        <Option value="clothes">Clothes</Option>
+                        <Option value="electronics">Electronics</Option>
                         <Option value="books">Books</Option>
+                        <Option value="furniture">Furniture</Option>
+                        <Option value="other">Other</Option>
                     </Select>
                 </Form.Item>
 

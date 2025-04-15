@@ -162,11 +162,17 @@ const Main = () => {
                                         </div>
                                     }
                                 >
-                                    <Space direction="vertical" size={4}>
+                                    <Space direction="vertical" size={4} style={{ width: '100%' }}>
+
                                         <Text type="secondary" style={{ fontSize: 12 }}>
                                             {item.name} • {formatter.format(new Date(item.created_at))}
                                         </Text>
-                                        <Text strong>{item.post_title}</Text>
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Text strong>{item.post_title}</Text>
+                                            <Text strong>${item.price}</Text>
+                                        </div>
+
                                         <Text type="secondary">{item.description}</Text>
                                     </Space>
                                 </Card>
