@@ -168,6 +168,7 @@ const EditPost = () => {
                         <Option value="electronics">Electronics</Option>
                         <Option value="books">Books</Option>
                         <Option value="furniture">Furniture</Option>
+                        <Option value="other">Other</Option>
                     </Select>
                 </Form.Item>
 
