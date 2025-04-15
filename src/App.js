@@ -8,20 +8,21 @@ import EditPost from './components/crud/EditPost';
 import Info from './components/crud/Info';
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
-        <Route path="add-post" element={<AddPost />} />
-        <Route path="update" element={<EditPost />} />
-        {/* need a post id for the update/info page */}
-        <Route path="info" element={<Info />} />
-        <Route path="info/:post" element={<Info />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="login" element={<Login />} />
+                <Route path="signup" element={<SignUp />} />
+                <Route path="add-post" element={<AddPost />} />
+                <Route path="update" element={<EditPost />} />
+                <Route path="update/:post" element={<EditPost />} />
+                {/* need a post id for the update/info page */}
+                <Route path="info" element={<Info />} />
+                <Route path="info/:post" element={<Info />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
