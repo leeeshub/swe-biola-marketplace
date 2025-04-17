@@ -63,7 +63,8 @@ const EditPost = () => {
     };
 
     const onCancel = () => {
-        form.resetFields();
+        //form.resetFields();
+        navigate('/');
     };
 
     useEffect(() => {

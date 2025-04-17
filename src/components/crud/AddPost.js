@@ -50,7 +50,8 @@ const AddPost = () => {
     };
 
     const onCancel = () => {
-        form.resetFields();
+        //form.resetFields();
+        navigate('/');
     };
 
 
