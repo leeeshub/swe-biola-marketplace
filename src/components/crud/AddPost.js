@@ -56,9 +56,6 @@ const AddPost = () => {
   };
 
   const onCancel = () => {
-    form.resetFields();
-  };
-  const onCancel = () => {
     //form.resetFields();
     navigate("/");
   };
