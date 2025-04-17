@@ -1,15 +1,15 @@
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import MainPage from './components/home/Main';
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainPage from "./components/home/Main";
 import Login from "./components/authentication/Login";
 import SignUp from "./components/authentication/SignUp";
 import Logout from "./components/authentication/Logout";
-
 import AddPost from './components/crud/AddPost';
 import EditPost from './components/crud/EditPost';
 import Info from './components/crud/Info';
 import Header from './components/common/Header';
 import Profile from './components/crud/Profile';
+
 
 function App() {
   return (
