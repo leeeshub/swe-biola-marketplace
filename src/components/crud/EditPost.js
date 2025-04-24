@@ -94,7 +94,7 @@ const EditPost = () => {
     return (
         <div style={{ maxWidth: 600, margin: '0 auto', padding: '2rem' }}>
             <h1 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 'bold' }}>
-                Kickstart Your Sales
+                Edit Your Post
             </h1>
 
             <Form

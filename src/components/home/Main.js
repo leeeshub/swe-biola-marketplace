@@ -36,7 +36,7 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 const Main = () => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("1"); // Default filter
+  const [selectedFilter, setSelectedFilter] = useState("3"); // Default filter
 
   useEffect(() => {
     const getPosts = async () => {
@@ -80,7 +80,7 @@ const Main = () => {
         <Menu.Item key="furniture">Furniture</Menu.Item>
         <Menu.Item key="other">Other</Menu.Item>
       </SubMenu>
-      <Menu.Item key="3">Newest</Menu.Item>
+      <Menu.Item key="3">Reset Filters</Menu.Item>
     </Menu>
   );
 

@@ -6,10 +6,11 @@
     "\\src",
     "\\src\\components",
     "\\src\\components\\authentication",
+    "\\src\\components\\common",
     "\\src\\components\\crud",
     "\\src\\components\\home",
     "\\src\\images"
   ],
-  "SelectedNode": "\\src\\components\\crud\\EditPost.js",
+  "SelectedNode": "\\src\\components\\common\\Header.js",
   "PreviewInSolutionExplorer": false
 }

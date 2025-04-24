@@ -63,7 +63,7 @@ const AddPost = () => {
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
       <h1 style={{ textAlign: "center", fontSize: "2rem", fontWeight: "bold" }}>
-        Kickstart Your Sales
+        Create a New Post
       </h1>
 
       <Form form={form} layout="vertical" onFinish={onFinish}>

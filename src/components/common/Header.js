@@ -53,12 +53,12 @@ const Header = () => {
 
                         <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                             <li>
-                                <Link to="/profile" className="nav-link px-2 me-4 tab">
+                                <Link to="/login" className="nav-link px-2 me-4 tab">
                                     Profile
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/add-post" className="nav-link px-2 tab">
+                                <Link to="/login" className="nav-link px-2 tab">
                                     Add Post
                                 </Link>
                             </li>
@@ -136,12 +136,12 @@ const Header = () => {
 
                     <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                         <li>
-                            <Link to="/profile" className="nav-link px-2 me-4 tab">
+                            <Link to="/login" className="nav-link px-2 me-4 tab">
                                 Profile
                             </Link>
                         </li>
                         <li>
-                            <Link to="/add-post" className="nav-link px-2 tab">
+                            <Link to="/login" className="nav-link px-2 tab">
                                 Add Post
                             </Link>
                         </li>
