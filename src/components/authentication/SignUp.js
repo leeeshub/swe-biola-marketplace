@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Form, Input, Typography, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import "./auth.css";
 
 let navigate;
 
@@ -53,66 +54,62 @@ const SignUp = () => {
     });
     
     return (
-        <div >
-            <Title>SIGN UP</Title>
-
-            <Form
-                name="signup"
-                layout="vertical"
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                {/* Name Field */}
-                <Form.Item name="name" label="Name"
-                    rules={[{ required: true, message: 'Please enter your name!' }]}>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item name="email" label="Email"
-                    rules={[{ required: true, message: 'Please enter your email!' }]}>
-                    <Input placeholder="e.g., john.doe@biola.edu" suffix={<Button type="primary">CONFIRM</Button>} />
-                </Form.Item>
-
-                <Form.Item name="password" label="Password"
-                    rules={[
-                        { required: true, message: 'Please enter your password' },
-                        {
-                            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/,
-                            message: 'Password must be at least 8 characters, include at least 1 letter, 1 number, and 1 special character (!@#$%^&*()).',
-                        },
-                    ]}
-                >
-                    <Input.Password suffix={<Button type="primary">CONFIRM</Button>} />
-                </Form.Item>
-
-                <Form.Item name="passwordConfirm" label="Password Confirmation"
-                    rules={[
-                        { required: true, message: 'Please confirm your password' },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (!value || getFieldValue('password') === value) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(new Error('Passwords do not match'));
-                            },
-                        }),
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Sign Up
-                    </Button>
-                </Form.Item>
-            </Form>
-
-            <Text>
-                Already have an account? <Link to="/login">Login</Link>
-            </Text>
+      <div className="login-container">
+        <div className="login-left">
+          <img src="/images/auth-logo.png" alt="Biola University Logo" className="logo-img" />
         </div>
+
+        <div className="login-right">
+          <Title level={1}>SIGN UP</Title>
+          <Form
+            name="signup"
+            layout="vertical"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item name="name" label="Name" rules={[{ required: true, message: 'Please enter your name!' }]}>
+              <Input className="custom-input" />
+            </Form.Item>
+
+            <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Please enter your email!' }]}>
+              <Input placeholder="e.g., john.doe@biola.edu" className="custom-input" />
+            </Form.Item>
+
+            <Form.Item name="password" label="Password" rules={[
+              { required: true, message: 'Please enter your password' },
+              {
+                pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/,
+                message: 'Password must be at least 8 characters, include at least 1 letter, 1 number, and 1 special character (!@#$%^&*()).',
+              },
+            ]}>
+              <Input.Password className="custom-input" />
+            </Form.Item>
+
+            <Form.Item name="passwordConfirm" label="Password Confirmation" rules={[
+              { required: true, message: 'Please confirm your password' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Passwords do not match'));
+                },
+              }),
+            ]}>
+              <Input.Password className="custom-input" />
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="login-button custom-button">
+                Sign Up
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <Text>Already have an account? <Link to="/login">Login</Link></Text>
+        </div>
+      </div>
     );
 }
 

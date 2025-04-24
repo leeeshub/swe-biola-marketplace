@@ -1,7 +1,9 @@
+// Login.js
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Typography, message } from "antd";
 import Cookies from "js-cookie";
+import "./auth.css";
 
 let navigate;
 
@@ -51,75 +53,30 @@ const Login = () => {
         }
     });
 
-    // Create the webpage
-    return (
-        <>
-            <Typography.Title
-                level={1}
-                style={{
-                    margin: 0,
-                }}
-            >
-                LOGIN
-            </Typography.Title>
+  return (
+    <div className="login-container">
+      <div className="login-left">
+        <img src="/images/auth-logo.png" alt="Biola University Logo" className="logo-img" />
+      </div>
 
-            <Form
-                name="basic"
-                labelCol={{
-                    span: 24,
-                }}
-                wrapperCol={{
-                    span: 16,
-                }}
-                style={{
-                    maxWidth: 600,
-                }}
-                initialValues={{
-                    remember: true,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                <Form.Item
-                    label="Email"
-                    name="email"
-
-                    rules={[
-                        {
-                            message: 'Please input your email!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            message: 'Please input your password!',
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
-
-                <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit">
-                        Login
-                    </Button>
-                </Form.Item>
-            </Form>
-
-            <Text>
-                Don’t have an account?
-                <Link to='/signup'> Sign Up</Link>
-            </Text>
-        </>
-    );
-}
+      <div className="login-right">
+        <Typography.Title level={1}>LOGIN</Typography.Title>
+        <Form name="login" onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
+          <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+            <Input placeholder="User ID" className="custom-input"/>
+          </Form.Item>
+          <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+            <Input.Password placeholder="Password" className="custom-input"/>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="login-button custom-button">Login</Button>
+          </Form.Item>
+        </Form>
+        <Text>Don’t have an account? <Link to="/signup">Sign Up</Link></Text>
+      </div>
+    </div>
+  );
+};
 
 const CheckSessionID = async (nav) => {
     console.log(Cookies.get("Session_ID"))
