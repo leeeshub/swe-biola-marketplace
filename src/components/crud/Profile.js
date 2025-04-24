@@ -10,9 +10,15 @@ import {
   Space,
   Button,
   message,
+  Popconfirm,
 } from "antd";
 import { Link } from "react-router-dom";
-import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  FilterOutlined,
+  SearchOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import Cookies from "js-cookie";
 
 const { Meta } = Card;
@@ -33,7 +39,7 @@ const formatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-const Main = () => {
+const Profile = () => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("1"); // Default filter
@@ -41,7 +47,7 @@ const Main = () => {
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await fetch("http://localhost:4000/get", {
+        const response = await fetch("http://localhost:4000/getProfile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -60,6 +66,33 @@ const Main = () => {
     };
     getPosts();
   }, []); // Don't remove these brackets even though it has squiggly lines under it
+
+  const handleDelete = async (postId) => {
+    // Comment out the real request
+    // try {
+    //   const response = await fetch("http://localhost:4000/deletePost", {
+    //     method: "DELETE",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ post_id: postId }),
+    //   });
+
+    //   const result = await response.json();
+
+    //   if (result.success) {
+    //     message.success("Post deleted");
+    //     setData((prev) => prev.filter((item) => item.post_id !== postId));
+    //   } else {
+    //     message.error("Failed to delete post");
+    //   }
+    // } catch (error) {
+    //   message.error("Server error");
+    // }
+
+    // Mocked delete for testing
+    message.success(`Pretending to delete post #${postId}`);
+  };
 
   const handleFilterChange = (e) => {
     setSelectedFilter(e.key);
@@ -136,9 +169,7 @@ const Main = () => {
   return (
     <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
       <Title level={2} style={{ textAlign: "center" }}>
-        Welcome to
-        <br />
-        <strong>Biola Marketplace</strong>
+        <strong>Welcome, {filteredData[0].name}</strong>
       </Title>
 
       <div
@@ -167,10 +198,10 @@ const Main = () => {
         {filteredData.length > 0 ? (
           filteredData.map((item) => (
             <Col key={item.id} xs={24} sm={12} md={8}>
-              <Link to={"/info/" + item.post_id}>
-                <Card
-                  hoverable
-                  cover={
+              <Card
+                hoverable
+                cover={
+                  <Link to={"/info/" + item.post_id}>
                     <div
                       style={{
                         height: 150,
@@ -190,32 +221,52 @@ const Main = () => {
                         }}
                       />
                     </div>
-                  }
-                >
-                  <Space
-                    direction="vertical"
-                    size={4}
-                    style={{ width: "100%" }}
+                  </Link>
+                }
+              >
+                <Space direction="vertical" size={4} style={{ width: "100%" }}>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    {item.name} � {formatter.format(new Date(item.created_at))}
+                  </Text>
+
+                  <Link
+                    to={"/info/" + item.post_id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
                   >
-                    <Text type="secondary" style={{ fontSize: 12 }}>
-                      {item.name} •{" "}
-                      {formatter.format(new Date(item.created_at))}
-                    </Text>
+                    <Text strong>{item.post_title}</Text>
+                    <Text strong>${item.price}</Text>
+                  </Link>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
+                  <Text type="secondary">{item.description}</Text>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <Link to={`/update/${item.post_id}`}>
+                      <Button icon={<EditOutlined />}>Edit</Button>
+                    </Link>
+                    <Popconfirm
+                      title="Are you sure you want to delete this post?"
+                      onConfirm={() => handleDelete(item.post_id)}
+                      okText="Yes"
+                      cancelText="No"
                     >
-                      <Text strong>{item.post_title}</Text>
-                      <Text strong>${item.price}</Text>
-                    </div>
-
-                    <Text type="secondary">{item.description}</Text>
-                  </Space>
-                </Card>
-              </Link>
+                      <Button danger icon={<DeleteOutlined />}>
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  </div>
+                </Space>
+              </Card>
             </Col>
           ))
         ) : (
@@ -237,4 +288,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Profile;
