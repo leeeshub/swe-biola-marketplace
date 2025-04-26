@@ -40,7 +40,9 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 });
 
 const Profile = () => {
-  const [data, setData] = useState(null);
+    const [data, setData] = useState(null);
+    const [name, setName] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("1"); // Default filter
 
@@ -56,9 +58,11 @@ const Profile = () => {
         });
         const message = await response.json();
 
+
         console.log(message.response);
 
-        setData(message.response);
+          setData(message.response);
+          setName(message.name);
         console.log(data);
       } catch (error) {
         message.error("Unable to connect to server");
@@ -68,30 +72,32 @@ const Profile = () => {
   }, []); // Don't remove these brackets even though it has squiggly lines under it
 
   const handleDelete = async (postId) => {
-    // Comment out the real request
-    // try {
-    //   const response = await fetch("http://localhost:4000/deletePost", {
-    //     method: "DELETE",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ post_id: postId }),
-    //   });
+     try {
+         const response = await fetch("http://localhost:4000/post-delete", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+             body: JSON.stringify({ session_id: Cookies.get("Session_ID") , post_id: postId }),
+       });
 
-    //   const result = await response.json();
+       const result = await response.json();
 
-    //   if (result.success) {
-    //     message.success("Post deleted");
-    //     setData((prev) => prev.filter((item) => item.post_id !== postId));
-    //   } else {
-    //     message.error("Failed to delete post");
-    //   }
-    // } catch (error) {
-    //   message.error("Server error");
-    // }
+         console.log(result);
+         if (result.message === "Post has been destroyed") {
+             message.success("Post deleted");
+             window.location.reload();
+       }
+       else {
+         message.error("Failed to delete post");
+       }
+     }
+     catch (error) {
+       message.error("Server error");
+     }
 
     // Mocked delete for testing
-    message.success(`Pretending to delete post #${postId}`);
+    // message.success(`Pretending to delete post #${postId}`);
   };
 
   const handleFilterChange = (e) => {
@@ -123,8 +129,10 @@ const Profile = () => {
 
   let filteredData = null;
 
-  if (data === null) {
-    console.log("Loading");
+    if (data === null) {
+     
+        console.log("Loading");
+        
   } else {
     console.log("retrieved");
     console.log(data);
@@ -165,11 +173,11 @@ const Profile = () => {
 
   if (filteredData === null) {
     return <div> Loading...</div>;
-  }
+    }
   return (
     <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
       <Title level={2} style={{ textAlign: "center" }}>
-        <strong>Welcome, {filteredData[0].name}</strong>
+        <strong>Welcome, {name}</strong>
       </Title>
 
       <div
