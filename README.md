@@ -20,14 +20,14 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 
 
-#### Running the Middleware
+### Running the Middleware
 
 Using Node.js, you can run the server using
 'node server.js'
 
 
 
-#### Running the MySQL Database
+### Running the MySQL Database
 
 From the MySQL command line you can setup the structure of the database using
 SOURCE <pathto>/MySQL/createDatabase.sql
