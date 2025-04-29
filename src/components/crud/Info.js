@@ -9,6 +9,9 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Cookies from "js-cookie";
+import Header from '../common/Header';
+import Footer from '../common/Footer';
+import './crud.css';
 
 const Info = () => {
   const [data, setData] = useState(null);
@@ -55,64 +58,70 @@ const Info = () => {
   const mailToLink = `mailto:${data.email}?subject=Interested%20in%20your%20post%20"${data.post_title}"`;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        backgroundColor: "#1e1e1e",
-        color: "white",
-        padding: "2rem 0",
-        justifyContent: "center",
-      }}
-    >
-      <div style={{ flex: "1 1 300px", maxWidth: 700 }}>
-        <img
-          src={data.image_url}
-          alt={data.post_title}
-          style={{ width: "100%", borderRadius: "10px", objectFit: "cover" }}
-        />
-      </div>
+    <>
+      <Header />
 
-      <div style={{ flex: "1 1 300px", padding: "1rem", maxWidth: 500 }}>
-        <h2 style={{ color: "#f87171", fontSize: "1.5rem" }}>${data.price}</h2>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
-          {data.post_title}
-        </h1>
-        <p style={{ margin: "1rem 0" }}>{data.description}</p>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          backgroundColor: "#1e1e1e",
+          color: "white",
+          padding: "5rem",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ flex: "1 1 300px", maxWidth: 600, paddingRight: 30}}>
+          <img
+            src={data.image_url}
+            alt={data.post_title}
+            style={{ width: "100%", borderRadius: "10px", objectFit: "cover" }}
+          />
+        </div>
 
-        <p style={{ fontStyle: "italic", color: "#ccc" }}>#{data.category}</p>
+        <div style={{ flex: "1 1 300px", padding: "1rem", maxWidth: 500, paddingLeft: 30 }}>
+          <h2 style={{ color: "#f87171", fontSize: "2rem", fontWeight: "bold"}}>${data.price}</h2>
+          <h1 style={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+            {data.post_title}
+          </h1>
+          <p style={{ margin: "1rem 0" }}>{data.description}</p>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginTop: "2rem",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <UserOutlined
-              style={{
-                fontSize: "2rem",
-                background: "#444",
-                padding: "0.5rem",
-                borderRadius: "50%",
-              }}
-            />
-            <div>
-              <p style={{ margin: 0, fontWeight: "bold" }}>{data.name}</p>
-              <p style={{ margin: 0, color: "#aaa" }}>{data.email}</p>
+          <p style={{ fontSize: "20px", fontStyle: "italic", color: "#ccc" }}>#{data.category}</p>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: "2rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <UserOutlined
+                style={{
+                  fontSize: "2rem",
+                  background: "#444",
+                  padding: "0.5rem",
+                  borderRadius: "50%",
+                }}
+              />
+              <div>
+                <p style={{ margin: 0, fontWeight: "bold" }}>{data.name}</p>
+                <p style={{ margin: 0, color: "#aaa" }}>{data.email}</p>
+              </div>
             </div>
+            {/* "Chat" Button with mailto link */}
+            <a href={mailToLink} target="_blank" rel="noopener noreferrer">
+              <Button type="primary" danger>
+                EMAIL
+              </Button>
+            </a>
           </div>
-          {/* "Chat" Button with mailto link */}
-          <a href={mailToLink} target="_blank" rel="noopener noreferrer">
-            <Button type="primary" danger>
-              EMAIL
-            </Button>
-          </a>
         </div>
       </div>
-    </div>
+
+      <Footer/>
+    </>
   );
 };
 

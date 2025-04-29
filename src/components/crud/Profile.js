@@ -20,6 +20,9 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import Cookies from "js-cookie";
+import Header from '../common/Header';
+import Footer from '../common/Footer';
+import './crud.css';
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -40,8 +43,8 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 });
 
 const Profile = () => {
-    const [data, setData] = useState(null);
-    const [name, setName] = useState(null);
+  const [data, setData] = useState(null);
+  const [name, setName] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("1"); // Default filter
@@ -61,8 +64,8 @@ const Profile = () => {
 
         console.log(message.response);
 
-          setData(message.response);
-          setName(message.name);
+        setData(message.response);
+        setName(message.name);
         console.log(data);
       } catch (error) {
         message.error("Unable to connect to server");
@@ -72,29 +75,29 @@ const Profile = () => {
   }, []); // Don't remove these brackets even though it has squiggly lines under it
 
   const handleDelete = async (postId) => {
-     try {
-         const response = await fetch("http://localhost:4000/post-delete", {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-             body: JSON.stringify({ session_id: Cookies.get("Session_ID") , post_id: postId }),
-       });
+    try {
+      const response = await fetch("http://localhost:4000/post-delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ session_id: Cookies.get("Session_ID"), post_id: postId }),
+      });
 
-       const result = await response.json();
+      const result = await response.json();
 
-         console.log(result);
-         if (result.message === "Post has been destroyed") {
-             message.success("Post deleted");
-             window.location.reload();
-       }
-       else {
-         message.error("Failed to delete post");
-       }
-     }
-     catch (error) {
-       message.error("Server error");
-     }
+      console.log(result);
+      if (result.message === "Post has been destroyed") {
+        message.success("Post deleted");
+        window.location.reload();
+      }
+      else {
+        message.error("Failed to delete post");
+      }
+    }
+    catch (error) {
+      message.error("Server error");
+    }
 
     // Mocked delete for testing
     // message.success(`Pretending to delete post #${postId}`);
@@ -129,10 +132,10 @@ const Profile = () => {
 
   let filteredData = null;
 
-    if (data === null) {
-     
-        console.log("Loading");
-        
+  if (data === null) {
+
+    console.log("Loading");
+
   } else {
     console.log("retrieved");
     console.log(data);
@@ -173,126 +176,138 @@ const Profile = () => {
 
   if (filteredData === null) {
     return <div> Loading...</div>;
-    }
+  }
   return (
-    <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
-      <Title level={2} style={{ textAlign: "center" }}>
-        <strong>Welcome, {name}</strong>
-      </Title>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "2rem",
-          gap: "1rem",
-        }}
-      >
-        <Input.Search
-          placeholder="Search by item name"
-          allowClear
-          enterButton={<SearchOutlined />}
-          style={{ maxWidth: 400 }}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)} // Update search state
-        />
+    <>
+      <Header />
+        <div className="circle-bg circle-1"></div>
+        <div className="circle-bg circle-2"></div>
+        <div className="circle-bg circle-3"></div>
 
-        <Dropdown overlay={filterMenu} trigger={["click"]}>
-          <Button icon={<FilterOutlined />}>Filter</Button>
-        </Dropdown>
-      </div>
+      <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto", minHeight: "65vh" }}>
+        <Title level={1} style={{ textAlign: "center", margin: "1.5rem 0"}}>
+          <strong>Welcome, {name}</strong>
+        </Title>
 
-      <Row gutter={[24, 24]}>
-        {filteredData.length > 0 ? (
-          filteredData.map((item) => (
-            <Col key={item.id} xs={24} sm={12} md={8}>
-              <Card
-                hoverable
-                cover={
-                  <Link to={"/info/" + item.post_id}>
-                    <div
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "3rem 0",
+            gap: "1rem",
+          }}
+        >
+          <Input.Search
+            placeholder="Search by item name"
+            allowClear
+            enterButton={<SearchOutlined />}
+            style={{ maxWidth: 400}}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search state
+          />
+
+          <Dropdown overlay={filterMenu} trigger={["click"]}>
+            <Button icon={<FilterOutlined />}>Filter</Button>
+          </Dropdown>
+        </div>
+
+        <Row gutter={[24, 24]}>
+          {filteredData.length > 0 ? (
+            filteredData.map((item) => (
+              <Col key={item.id} xs={24} sm={12} md={8}>
+                <Card
+                  hoverable
+                  cover={
+                    <Link to={"/info/" + item.post_id}>
+                      <div
+                        style={{
+                          height: 150,
+                          backgroundColor: "#ccc",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderTopRightRadius: "7px",
+                          borderTopLeftRadius: "7px",
+                        }}
+                      >
+                        <img
+                          alt="placeholder"
+                          src={item.image_url}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            opacity: 0.75,
+                          }}
+                        />
+                      </div>
+                    </Link>
+                  }
+                >
+                  <Space direction="vertical" size={4} style={{ width: "100%" }}>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {item.name} � {formatter.format(new Date(item.created_at))}
+                    </Text>
+
+                    <Link
+                      to={"/info/" + item.post_id}
                       style={{
-                        height: 150,
-                        backgroundColor: "#ccc",
                         display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        justifyContent: "space-between",
+                        textDecoration: "none",
+                        color: "inherit",
                       }}
                     >
-                      <img
-                        alt="placeholder"
-                        src={item.image_url}
-                        style={{
-                          maxWidth: "100%",
-                          maxHeight: "100%",
-                          opacity: 0.75,
-                        }}
-                      />
-                    </div>
-                  </Link>
-                }
-              >
-                <Space direction="vertical" size={4} style={{ width: "100%" }}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    {item.name} � {formatter.format(new Date(item.created_at))}
-                  </Text>
-
-                  <Link
-                    to={"/info/" + item.post_id}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
-                  >
-                    <Text strong>{item.post_title}</Text>
-                    <Text strong>${item.price}</Text>
-                  </Link>
-
-                  <Text type="secondary">{item.description}</Text>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <Link to={`/update/${item.post_id}`}>
-                      <Button icon={<EditOutlined />}>Edit</Button>
+                      <Text strong>{item.post_title}</Text>
+                      <Text strong>${item.price}</Text>
                     </Link>
-                    <Popconfirm
-                      title="Are you sure you want to delete this post?"
-                      onConfirm={() => handleDelete(item.post_id)}
-                      okText="Yes"
-                      cancelText="No"
+
+                    <Text type="secondary">{item.description}</Text>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        gap: "0.5rem",
+                        marginTop: "1rem"
+                      }}
                     >
-                      <Button danger icon={<DeleteOutlined />}>
-                        Delete
-                      </Button>
-                    </Popconfirm>
-                  </div>
-                </Space>
-              </Card>
+                      <Link to={`/update/${item.post_id}`}>
+                        <Button icon={<EditOutlined />}>Edit</Button>
+                      </Link>
+                      <Popconfirm
+                        title="Are you sure you want to delete this post?"
+                        onConfirm={() => handleDelete(item.post_id)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Button danger icon={<DeleteOutlined />}>
+                          Delete
+                        </Button>
+                      </Popconfirm>
+                    </div>
+                  </Space>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <Col span={24}>
+              <Text
+                type="secondary"
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  marginTop: "2rem",
+                }}
+              >
+                No items found.
+              </Text>
             </Col>
-          ))
-        ) : (
-          <Col span={24}>
-            <Text
-              type="secondary"
-              style={{
-                display: "block",
-                textAlign: "center",
-                marginTop: "2rem",
-              }}
-            >
-              No items found.
-            </Text>
-          </Col>
-        )}
-      </Row>
-    </div>
+          )}
+        </Row>
+      </div>
+      <Footer />
+    </>
   );
 };
 

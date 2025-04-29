@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Link, useParams, useNavigate } from 're
 import { Form, Input, InputNumber, Button, Upload, Select, message } from 'antd';
 import { UploadOutlined, DollarOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie";
-
+import Header from '../common/Header';
+import Footer from '../common/Footer';
+import './crud.css';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -92,15 +94,21 @@ const EditPost = () => {
         return <div> Loading...</div>;
     }
     return (
-        <div style={{ maxWidth: 600, margin: '0 auto', padding: '2rem' }}>
-            <h1 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 'bold' }}>
-                Edit Your Post
-            </h1>
+        <>
+        <Header />
+        <div className="circle-bg circle-1"></div>
+        <div className="circle-bg circle-2"></div>
+        <div className="circle-bg circle-3"></div>
 
+        <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
+            <h1 style={{ textAlign: "center", fontSize: "2rem", fontWeight: "bold", marginBottom: "2rem" }}>
+              Edit Your Post
+            </h1>
             <Form
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
+                style={{ fontWeight: "bold" }}
                 initialValues={{
                     title: data.post_title,
                     description: data.description,
@@ -113,25 +121,45 @@ const EditPost = () => {
                     label="Title"
                     name="title"
                     rules={[{ required: true, message: 'Please enter a title' }]}
+                    style={{ marginBottom: "20px" }}
                 >
-                    <Input placeholder="Enter title" />
+                    <Input placeholder="Enter title" 
+                        style={{ height: "3rem" }}
+                    />
                 </Form.Item>
 
                 <Form.Item
                     label="Description"
                     name="description"
                     rules={[{ required: true, message: 'Please provide a description' }]}
+                    style={{ marginBottom: "20px" }}
                 >
-                    <TextArea rows={4} placeholder="Please provide a detailed information" />
+                    <TextArea rows={7} placeholder="Please provide a detailed information" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Category"
+                    name="category"
+                    rules={[{ required: true, message: 'Please select a category' }]}
+                    style={{ marginBottom: "20px" }}
+                >
+                    <Select placeholder="Select a category" style={{ height: "3rem"}}>
+                        <Option value="clothes">Clothes</Option>
+                        <Option value="electronics">Electronics</Option>
+                        <Option value="books">Books</Option>
+                        <Option value="furniture">Furniture</Option>
+                        <Option value="other">Other</Option>
+                    </Select>
                 </Form.Item>
 
                 <Form.Item
                     label="Price"
                     name="price"
+                    style={{ marginBottom: "20px" }}
                     rules={[{ required: true, message: 'Please enter a price' }]}
                 >
                     <InputNumber
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', height: "3rem" }}
                         min={0}
                         formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -159,26 +187,17 @@ const EditPost = () => {
                     </Upload>
                 </Form.Item>
 
-                <Form.Item
-                    label="Category"
-                    name="category"
-                    rules={[{ required: true, message: 'Please select a category' }]}
-                >
-                    <Select placeholder="Select a category">
-                        <Option value="clothes">Clothes</Option>
-                        <Option value="electronics">Electronics</Option>
-                        <Option value="books">Books</Option>
-                        <Option value="furniture">Furniture</Option>
-                        <Option value="other">Other</Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button onClick={onCancel}>Cancel</Button>
-                    <Button type="primary" htmlType="submit">Submit</Button>
+                <Form.Item>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <Button onClick={onCancel} className="btns">Cancel</Button>
+                        <Button type="primary" htmlType="submit" className="btns">Submit</Button>
+                    </div>
                 </Form.Item>
             </Form>
         </div>
+
+        <Footer/>
+    </>
     );
 };
 
