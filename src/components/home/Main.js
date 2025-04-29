@@ -11,8 +11,14 @@ import {
   Button,
   message,
 } from "antd";
+<<<<<<< Updated upstream
+=======
+import { Link } from 'react-router-dom';
+>>>>>>> Stashed changes
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
+import './main.css';
+import Header from '../common/Header';
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -51,6 +57,7 @@ const Main = () => {
 
         console.log(message.response);
 
+<<<<<<< Updated upstream
         setData(message.response);
         console.log(data);
       } catch (error) {
@@ -59,6 +66,16 @@ const Main = () => {
     };
     getPosts();
   }, []);
+=======
+                setData(message.response);
+                console.log(data);
+            } catch (error) {
+                message.error("Unable to connect to server");
+            }
+        };
+        getPosts();
+    }, []);
+>>>>>>> Stashed changes
 
   const handleFilterChange = (e) => {
     setSelectedFilter(e.key);
@@ -103,16 +120,21 @@ const Main = () => {
       });
   }
 
-  if (filteredData === null) {
-    return <div> Loading...</div>;
-  }
-  return (
-    <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
-      <Title level={2} style={{ textAlign: "center" }}>
-        Welcome to
-        <br />
-        <strong>Biola Marketplace</strong>
-      </Title>
+    if (filteredData === null) {
+        return <div> Loading...</div>;
+    }
+    return (
+      <div>
+        <Header/>
+        <div className="circle-bg circle-1"></div>
+        <div className="circle-bg circle-2"></div>
+        <div className="circle-bg circle-3"></div>
+        <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
+            <Title level={2} style={{ textAlign: "center" }}>
+                Welcome to
+                <br />
+                <strong>Biola Marketplace</strong>
+            </Title>
 
       <div
         style={{
@@ -136,6 +158,7 @@ const Main = () => {
         </Dropdown>
       </div>
 
+<<<<<<< Updated upstream
       <Row gutter={[24, 24]}>
         {filteredData.length > 0 ? (
           filteredData.map((item) => (
@@ -187,6 +210,60 @@ const Main = () => {
       </Row>
     </div>
   );
+=======
+            <Row gutter={[24, 24]}>
+                {filteredData.length > 0 ? (
+                    filteredData.map((item) => (
+                        <Col key={item.id} xs={24} sm={12} md={8}>
+                            <Card
+                                hoverable
+                                cover={
+                                    <div
+                                        style={{
+                                            height: 150,
+                                            backgroundColor: "#ccc",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <img
+                                            alt="placeholder"
+                                            src={item.image_url}
+                                            style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
+                                        />
+                                    </div>
+                                }
+                            >
+                                <Space direction="vertical" size={4}>
+                                    <Text type="secondary" style={{ fontSize: 12 }}>
+                                        {item.name} • {formatter.format(new Date(item.created_at))}
+                                    </Text>
+                                    <Text strong>{item.post_title}</Text>
+                                    <Text type="secondary">{item.description}</Text>
+                                </Space>
+                            </Card>
+                        </Col>
+                    ))
+                ) : (
+                    <Col span={24}>
+                        <Text
+                            type="secondary"
+                            style={{
+                                display: "block",
+                                textAlign: "center",
+                                marginTop: "2rem",
+                            }}
+                        >
+                            No items found.
+                        </Text>
+                    </Col>
+                )}
+            </Row>
+        </div>
+      </div>
+    );
+>>>>>>> Stashed changes
 };
 
 export default Main;
