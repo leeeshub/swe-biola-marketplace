@@ -38,7 +38,7 @@ const AddPost = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/post", {
+        const response = await fetch("http://localhost:4000/post", {
         method: "POST",
         body: formData,
       });
@@ -151,7 +151,7 @@ const AddPost = () => {
           >
             <Upload
               name="images"
-              accept=".png, .jpg"
+              accept=".png, .jpg, .jpeg"
               listType="picture"
               maxCount={1}
               beforeUpload={() => false}
@@ -180,15 +180,13 @@ const AddPost = () => {
           </Form.Item>
         </Form>
       </div>
-
-      <Footer/>
     </>
   );
 };
 
 const CheckSessionID = async (nav) => {
   // Send a HTTPS Post request to the server, with the body being the session id cookie
-  const response = await fetch("http://localhost:4000/checkSession", {
+    const response = await fetch("http://localhost:4000/checkSession", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

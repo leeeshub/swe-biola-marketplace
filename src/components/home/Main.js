@@ -44,7 +44,7 @@ const Main = () => {
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await fetch("http://localhost:4000/get", {
+          const response = await fetch("http://localhost:4000/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -242,9 +242,7 @@ const Main = () => {
           </Col>
         )}
       </Row>
-    </div>
-
-    <Footer/>
+            </div>
     </div>
   );
 };

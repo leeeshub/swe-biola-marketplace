@@ -11,7 +11,7 @@ const { Text } = Typography;
 
 const onFinish = async (values) => {
   try {
-    const response = await fetch("http://localhost:4000/login", {
+      const response = await fetch("http://localhost:4000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const Login = () => {
         <Typography.Title level={1}>LOGIN</Typography.Title>
         <Form name="login" onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
           <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
-            <Input placeholder="User ID" className="custom-input"/>
+            <Input placeholder="Email" className="custom-input"/>
           </Form.Item>
           <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
             <Input.Password placeholder="Password" className="custom-input"/>
@@ -81,7 +81,7 @@ const Login = () => {
 const CheckSessionID = async (nav) => {
     console.log(Cookies.get("Session_ID"))
   // Send a HTTPS Post request to the server, with the body being the session id cookie
-  const response = await fetch("http://localhost:4000/checkSession", {
+    const response = await fetch("http://localhost:4000/checkSession", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

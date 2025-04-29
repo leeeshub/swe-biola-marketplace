@@ -52,7 +52,7 @@ const Profile = () => {
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await fetch("http://localhost:4000/getProfile", {
+          const response = await fetch("http://localhost:4000/getProfile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const Profile = () => {
 
   const handleDelete = async (postId) => {
     try {
-      const response = await fetch("http://localhost:4000/post-delete", {
+        const response = await fetch("http://localhost:4000/post-delete", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -246,7 +246,7 @@ const Profile = () => {
                 >
                   <Space direction="vertical" size={4} style={{ width: "100%" }}>
                     <Text type="secondary" style={{ fontSize: 12 }}>
-                      {item.name} � {formatter.format(new Date(item.created_at))}
+                      {item.name} - {formatter.format(new Date(item.created_at))}
                     </Text>
 
                     <Link
@@ -306,7 +306,6 @@ const Profile = () => {
           )}
         </Row>
       </div>
-      <Footer />
     </>
   );
 };
