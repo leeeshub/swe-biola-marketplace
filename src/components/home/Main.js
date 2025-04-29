@@ -16,6 +16,7 @@ import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import './main.css';
 import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -141,7 +142,7 @@ const Main = () => {
         <div className="circle-bg circle-1"></div>
         <div className="circle-bg circle-2"></div>
         <div className="circle-bg circle-3"></div>
-        <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto", minHeight: "65vh"}}>
             <Title level={1} style={{ textAlign: "center" }}>
                 Welcome to
                 <br />
@@ -242,6 +243,8 @@ const Main = () => {
         )}
       </Row>
     </div>
+
+    <Footer/>
     </div>
   );
 };
