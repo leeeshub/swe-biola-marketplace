@@ -142,7 +142,7 @@ const Main = () => {
         <div className="circle-bg circle-2"></div>
         <div className="circle-bg circle-3"></div>
         <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
-            <Title level={2} style={{ textAlign: "center" }}>
+            <Title level={1} style={{ textAlign: "center" }}>
                 Welcome to
                 <br />
                 <strong>Biola Marketplace</strong>
@@ -154,13 +154,14 @@ const Main = () => {
           justifyContent: "center",
           marginBottom: "2rem",
           gap: "1rem",
+          paddingTop: "1rem"
         }}
       >
         <Input.Search
           placeholder="Search by item name"
           allowClear
           enterButton={<SearchOutlined />}
-          style={{ maxWidth: 400 }}
+          style={{ maxWidth: 400, height: "40px" }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Update search state
         />
@@ -240,6 +241,7 @@ const Main = () => {
           </Col>
         )}
       </Row>
+    </div>
     </div>
   );
 };
