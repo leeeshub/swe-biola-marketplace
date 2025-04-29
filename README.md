@@ -1,4 +1,4 @@
-#### Running the Frontend
+### Running the Frontend
 ### `npm start`
 
 Runs the app in the development mode.\
