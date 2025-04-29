@@ -32,4 +32,4 @@ Using Node.js, you can run the server using:
 
 From the MySQL command line you can setup the structure of the database using:
 
-'SOURCE <pathto>/MySQL/createDatabase.sql'
+'SOURCE \<pathto\>/MySQL/createDatabase.sql'
