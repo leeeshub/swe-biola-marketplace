@@ -1,7 +1,11 @@
 const express = require("express"); // web framework for Node.js to handle HTTP requests
+const multer = require("multer");
+const path = require("path");
+const url = require("url");
 const cors = require("cors"); // allows for Cross-Origin Resource Sharing (allows frontend to communicate with backend on different ports)
 const bodyParser = require("body-parser"); // parses incoming requests with JSON
 const mysql = require("mysql2"); // module to connect to database
+const fs = require("fs");
 
 const app = express();
 const PORT = 4000;
@@ -31,47 +35,68 @@ dbViewer.connect(function (err) {
   console.log("Connected!");
 });
 
+// Set up multer storage (same as before)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "src/images"); // Save to the 'public/images' folder
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext); // Add a timestamp to the filename to avoid conflicts
+  },
+});
+// Initialize multer
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});
+
 // Middleware
 app.use(cors()); // Allow cross-origin requests
-app.use(bodyParser.json()); // Parse incoming JSON requests
+app.use(bodyParser.json({ limit: "20mb" })); // Parse incoming JSON requests
 
+// To get images
+app.use("/images", express.static(path.join(__dirname, "src", "images")));
 
 async function checkSession(session_id) {
-    return new Promise((resolve, reject) => {
-        try {
-            // Query to see if the session ID is for a valid user
-            dbViewer.query('SELECT user_id, created_at FROM Sessions WHERE session_id="' + session_id + '"', function (err, results, fields) {
-                // Throw any error with the query
-                if (err) {
-                    reject(err); // Reject promise with error
-                    return;
-                }
+  return new Promise((resolve, reject) => {
+    try {
+      // Query to see if the session ID is for a valid user
+      dbViewer.query(
+        'SELECT user_id, created_at FROM Sessions WHERE session_id="' +
+          session_id +
+          '"',
+        function (err, results, fields) {
+          // Throw any error with the query
+          if (err) {
+            reject(err); // Reject promise with error
+            return;
+          }
 
-                // If results are less than 1, then there is no user with that session ID
-                if (results.length < 1) {
-                    return resolve(-1); // Resolve with 0 if no valid session found
-                }
-                else {
-                    // store the results of the first (and hopefully only) query for that session
-                    const retrievedUserID = results[0].user_id;
-                    const retrievedCreatedAt = results[0].created_at;
+          // If results are less than 1, then there is no user with that session ID
+          if (results.length < 1) {
+            return resolve(-1); // Resolve with 0 if no valid session found
+          } else {
+            // store the results of the first (and hopefully only) query for that session
+            const retrievedUserID = results[0].user_id;
+            const retrievedCreatedAt = results[0].created_at;
 
-                    // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in milliseconds)
-                    if (Date.now() - retrievedCreatedAt < 86400000) {
-                        return resolve(retrievedUserID); // Resolve with user_id if session is valid
-                    }
-                    // If it has expired
-                    else {
-                        return resolve(-1); // Resolve with 0 if session is expired
-                    }
-                }
-            });
-
-        } catch (err) {
-            console.log(err);
-            return reject(err); // Reject promise with error
+            // If they have a session ID, make sure it is valid and hasn't expired (86400000 is 1 day in milliseconds)
+            if (Date.now() - retrievedCreatedAt < 86400000) {
+              return resolve(retrievedUserID); // Resolve with user_id if session is valid
+            }
+            // If it has expired
+            else {
+              return resolve(-1); // Resolve with 0 if session is expired
+            }
+          }
         }
-    });
+      );
+    } catch (err) {
+      console.log(err);
+      return reject(err); // Reject promise with error
+    }
+  });
 }
 
 // Simple login endpoint
@@ -124,15 +149,14 @@ app.post("/login", (req, res) => {
                     function (err, results, fields) {
                       // Throw any error with the query
                       if (err) throw err;
+                      // The login was succesful, return the session ID
+                      res.status(200).json({
+                        message: "Login successful",
+                        user: email,
+                        session: session_id,
+                      });
                     }
                   );
-
-                  // The login was succesful, return the session ID
-                  res.status(200).json({
-                    message: "Login successful",
-                    user: email,
-                    session: session_id,
-                  });
                 }
               );
             }
@@ -159,15 +183,15 @@ app.post("/login", (req, res) => {
                       '"',
                     function (err, results, fields) {
                       if (err) throw err;
+
+                      // The login was succesful, return the new session ID
+                      res.status(200).json({
+                        message: "Login successful",
+                        user: email,
+                        session: session_id,
+                      });
                     }
                   );
-
-                  // The login was succesful, return the new session ID
-                  res.status(200).json({
-                    message: "Login successful",
-                    user: email,
-                    session: session_id,
-                  });
                 }
               );
             }
@@ -195,25 +219,25 @@ app.post("/login", (req, res) => {
   }
 });
 
-app.post('/checksession', async function(req, res) {
-    const { session_id } = req.body;
+app.post("/checksession", async function (req, res) {
+  const { session_id } = req.body;
 
-    try {
-        const retrievedUserID = await checkSession(session_id);
+  try {
+    const retrievedUserID = await checkSession(session_id);
 
-        console.log(retrievedUserID);
-        if (retrievedUserID > 0) {
-            res
-                .status(200)
-                .json({ message: "Valid Session_ID", user_id: retrievedUserID });
-        } else {
-            res.status(401).json({ message: "Not a valid session" });
-        }
-    } catch (err) {
-        // If there was any errors with one of the queries, then just return a failed login to the user
-        res.status(401).json({ message: "Not a valid session" });
-        console.log(err);
+    console.log(retrievedUserID);
+    if (retrievedUserID > 0) {
+      res
+        .status(200)
+        .json({ message: "Valid Session_ID", user_id: retrievedUserID });
+    } else {
+      res.status(401).json({ message: "Not a valid session" });
     }
+  } catch (err) {
+    // If there was any errors with one of the queries, then just return a failed login to the user
+    res.status(401).json({ message: "Not a valid session" });
+    console.log(err);
+  }
 });
 
 app.post("/signup", (req, res) => {
@@ -242,6 +266,8 @@ app.post("/signup", (req, res) => {
               '")',
             function (err, results, fields) {
               if (err) throw err;
+              const user_id = results.insertId;
+
               // New user has been created
               dbViewer.query(
                 "SELECT UUID() AS session_id",
@@ -252,9 +278,24 @@ app.post("/signup", (req, res) => {
                   // Store the session ID
                   const session_id = results[0].session_id;
 
-                  res
-                    .status(200)
-                    .json({ message: "New user created", session: session_id });
+                  dbWriter.query(
+                    'INSERT INTO Sessions (session_id, user_id, created_at) VALUES ("' +
+                      session_id +
+                      '", "' +
+                      user_id +
+                      '", "' +
+                      Date.now() +
+                      '")',
+                    function (err, results, fields) {
+                      // Throw any error with the query
+                      if (err) throw err;
+                      // The login was succesful, return the session ID
+                      res.status(200).json({
+                        message: "New user created",
+                        session: session_id,
+                      });
+                    }
+                  );
                 }
               );
             }
@@ -268,27 +309,23 @@ app.post("/signup", (req, res) => {
   }
 });
 
-app.post("/post", (req, res) => {
+app.post("/post", upload.single("images"), (req, res) => {
   console.log("Post received");
 
-    console.log(req.body)
+  if (req.fileValidationError) {
+    return res.status(400).json({ message: req.fileValidationError });
+  }
+  console.log(req.file);
+
   // The body of the post should contain the information needed to create a new post
   // Whenever the post page is created, this can be adjusted to match the actual request
-    const {
-        session_id,
-    title,
-    price,
-    category,
-      description,
-      
-    } = req.body;
+  const { session_id, title, price, category, description, images } = req.body;
 
-    console.log(title);
-    let type = 1;
-    let item = title;
-    let author = "NULL";
-    let isbn = "NULL";
-    
+  console.log(title);
+  let type = 1;
+  let item = title;
+  let author = "NULL";
+  let isbn = "NULL";
 
   try {
     // Get the user from the user's session id
@@ -337,9 +374,19 @@ app.post("/post", (req, res) => {
                   author +
                   '", ' +
                   isbn +
-                  ')',
+                  ")",
                 function (err, results, fields) {
                   if (err) throw err;
+
+                  //console.log(images);
+                  if (req.file) {
+                    dbWriter.query(
+                      `INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${req.file.originalname}", "${req.file.filename}")`,
+                      function (err, results, fields) {
+                        if (err) throw err;
+                      }
+                    );
+                  }
 
                   // Post succesfully created
                   res.status(200).json({ message: "New post created" });
@@ -357,26 +404,21 @@ app.post("/post", (req, res) => {
   }
 });
 
-// Example Post Post request body:
-// { "session_id": "c0e49364-0047-11f0-94ae-0a0027000014", "post_title": "New Post created by a Post request", "price": "10000.00", "type": "1", "category": "Stuff", "item": "The item of the post", "description": "This is the description", "author": "me", "isbn": "10234" }
+app.post("/post-edit", upload.single("images"), (req, res) => {
+  console.log("Post edit");
 
-app.post("/post-edit", (req, res) => {
-  console.log("Post edit receieved");
+  if (req.fileValidationError) {
+    return res.status(400).json({ message: req.fileValidationError });
+  }
+  console.log(req.file);
 
   // The body of the post should contain the information needed to create a new post
   // Whenever the post page is created, this can be adjusted to match the actual request
-  const {
-    session_id,
-    post_id,
-    post_title,
-    price,
-    type,
-    category,
-    item,
-    description,
-    author,
-    isbn,
-  } = req.body;
+  const { session_id, title, price, category, description, images, post_id } =
+    req.body;
+
+  let type = 1;
+  let item = title;
 
   try {
     // Get the user from the user's session id
@@ -385,6 +427,7 @@ app.post("/post-edit", (req, res) => {
       function (err, results, fields) {
         if (err) throw err;
 
+        console.log(session_id);
         // If there isn't any results, then the session ID is invalid
         if (results.length < 1) {
           res.status(401).json({ message: "Session ID is invalid" });
@@ -403,7 +446,7 @@ app.post("/post-edit", (req, res) => {
                 if (user_id === results[0].user_id) {
                   dbWriter.query(
                     'UPDATE Posts SET post_title = "' +
-                      post_title +
+                      title +
                       '", price = "' +
                       price +
                       '", type = "' +
@@ -423,10 +466,6 @@ app.post("/post-edit", (req, res) => {
                           item +
                           '", description = "' +
                           description +
-                          '", author = "' +
-                          author +
-                          '", isbn = "' +
-                          isbn +
                           '" WHERE post_id = "' +
                           post_id +
                           '"',
@@ -434,6 +473,22 @@ app.post("/post-edit", (req, res) => {
                           if (err) throw err;
 
                           // Post succesfully edited
+
+                          if (req.file) {
+                            dbDeleter.query(
+                              `DELETE FROM Images WHERE post_id = ${post_id}`,
+                              function (err, results, fields) {
+                                if (err) throw err;
+                                dbWriter.query(
+                                  `INSERT INTO Images (post_id, image_name, image_url) VALUES ("${post_id}", "${req.file.originalname}", "${req.file.filename}")`,
+                                  function (err, results, fields) {
+                                    if (err) throw err;
+                                  }
+                                );
+                              }
+                            );
+                          }
+
                           res
                             .status(200)
                             .json({ message: "Post has been edited" });
@@ -465,77 +520,138 @@ app.post("/post-edit", (req, res) => {
   }
 });
 
-app.post("/post-delete", (req, res) => {
-  const { session_id, post_id } = req.body;
+app.post("/post-delete", async (req, res) => {
+    const { session_id, post_id } = req.body;
 
-  try {
-    const retrievedUserID = checkSession(session_id);
+    console.log(session_id)
+    console.log(post_id)
 
-    if (retrievedUserID !== 0) {
-      dbViewer.query(
-        'SELECT user_id FROM Posts WHERE post_id ="' + post_id + '"',
-        function (err, results, fields) {
-          // If there is a post with the id
-          if (results.length > 0) {
-            // If it is the correct user
-            if (retrievedUserID === results[0].user_id) {
-              // Delete the post and related items
-              dbDeleter.query(
-                'DELETE FROM Posts WHERE post_id = ""',
+    try {
+        const retrievedUserID = await checkSession(session_id);
+        console.log(retrievedUserID)
+        if (retrievedUserID !== 0) {
+            dbViewer.query(
+                'SELECT user_id FROM Posts WHERE post_id ="' + post_id + '"',
                 function (err, results, fields) {
-                  if (err) throw err;
+                    // If there is a post with the id
+                    if (results.length > 0) {
+                        // If it is the correct user
+                        if (retrievedUserID === results[0].user_id) {
+                            // Delete the post and related items
+                            dbDeleter.query(
+                                `DELETE FROM Items WHERE post_id = ${post_id}`,
+                                function (err, results, fields) {
+                                    if (err) throw err;
 
-                  dbDeleter.query(
-                    'DELETE FROM Items WHERE post_id = ""',
-                    function (err, results, fields) {
-                      if (err) throw err;
-                      res
-                        .status(200)
-                        .json({ message: "Post has been destroyed" });
+                                    dbDeleter.query(
+                                        `DELETE FROM Images WHERE post_id = ${post_id}`,
+                                        function (err, results, fields) {
+                                            if (err) throw err;
+
+                                            dbDeleter.query(
+                                                `DELETE FROM Posts WHERE post_id = ${post_id}`,
+                                                function (err, results, fields) {
+                                                    if (err) throw err;
+                                                    res.status(200).json({ message: "Post has been destroyed" });
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                        // Else, a user is trying to edit someone elses post
+                        else {
+                            res.status(401).json({ message: "Post doesn't belong to user" });
+                        }
                     }
-                  );
+                    // Else, there is no post with the id
+                    else {
+                        res.status(401).json({ message: "Post doesn't exist" });
+                    }
                 }
-              );
-            }
-            // Else, a user is trying to edit someone elses post
-            else {
-              res.status(401).json({ message: "Post doesn't belong to user" });
-            }
-          }
-          // Else, there is no post with the id
-          else {
-            res.status(401).json({ message: "Post doesn't exist" });
+            );
+        }
+        else {
+            res.status(401).json({ message: "Not a valid session" });
+        }
+    } catch (err) {
+        // If there was any errors with one of the queries, then just return a failed login to the user
+        res.status(401).json({ message: "Not a valid session" });
+        console.log(err);
+    }
+});
+
+app.post("/get", async function (req, res) {
+  const { session_id } = req.body;
+  try {
+    const retrievedUserID = await checkSession(session_id);
+
+    dbViewer.query(
+      //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
+      `SELECT name, Posts.post_id, post_title, price, created_at, description, category, image_url FROM (((Posts LEFT JOIN Items ON Posts.post_id = Items.post_id) LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)) LEFT JOIN Images ON Posts.post_id = Images.post_id`,
+      function (err, results, fields) {
+        if (err) throw err;
+
+        for (var i in results) {
+          //console.log(results[i].image_url);
+          if (results[i].image_url !== null) {
+            results[i].image_url = new URL(
+              results[i].image_url,
+              "http://localhost:4000/images/"
+            ).href;
+            //console.log(results[i].image_url);
+          } else {
+            results[i].image_url = "https://img.icons8.com/ios/100/image.png";
           }
         }
-      );
 
-      res
-        .status(200)
-        .json({ message: "Valid Session_ID", user_id: retrievedUserID });
-    } else {
-      res.status(401).json({ message: "Not a valid session" });
-    }
+        res.status(200).json({ message: "Selected", response: results });
+      }
+    );
   } catch (err) {
     // If there was any errors with one of the queries, then just return a failed login to the user
-    res.status(401).json({ message: "Not a valid session" });
+    res.status(401).json({ message: "Error in retrieving posts" });
     console.log(err);
   }
 });
 
-
-app.post("/get", async function (req, res) {
+app.post("/getProfile", async function (req, res) {
     const { session_id } = req.body;
     try {
         const retrievedUserID = await checkSession(session_id);
-
         dbViewer.query(
             //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
-            `SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)`,
+            `SELECT name FROM UserProfiles WHERE user_id = ${retrievedUserID}`,
             function (err, results, fields) {
                 if (err) throw err;
 
-                res.status(200).json({ message: "Selected", response: results });
-            });
+                const retrievedName = results[0].name;
+
+                dbViewer.query(
+                    //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
+                    `SELECT name, Posts.post_id, post_title, price, created_at, description, image_url FROM (((Posts LEFT JOIN Items ON Posts.post_id = Items.post_id) LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)) LEFT JOIN Images ON Posts.post_id = Images.post_id WHERE Posts.user_id = ${retrievedUserID}`,
+                    function (err, results, fields) {
+                        if (err) throw err;
+
+                        for (var i in results) {
+                            //console.log(results[i].image_url);
+                            if (results[i].image_url !== null) {
+                                results[i].image_url = new URL(
+                                    results[i].image_url,
+                                    "http://localhost:4000/images/"
+                                ).href;
+                                //console.log(results[i].image_url);
+                            } else {
+                                results[i].image_url = "https://img.icons8.com/ios/100/image.png";
+                            }
+                        }
+
+                        res.status(200).json({ message: "Selected", response: results, name: retrievedName });
+                    }
+                );
+            }
+        );
 
     } catch (err) {
         // If there was any errors with one of the queries, then just return a failed login to the user
@@ -544,7 +660,37 @@ app.post("/get", async function (req, res) {
     }
 });
 
+app.post("/getDetailed", async function (req, res) {
+  const { post_id } = req.body;
+  try {
+    dbViewer.query(
+      //`SELECT name, post_title, price, created_at, description FROM (Posts LEFT JOIN Items ON Posts.post_id = Items.post_id LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id) WHERE Posts.user_id != ${retrievedUserID}`,
+      `SELECT name, email, post_title, price, category, created_at, description, image_url FROM (((Posts LEFT JOIN Items ON Posts.post_id = Items.post_id) LEFT JOIN UserProfiles ON Posts.user_id = UserProfiles.user_id)) LEFT JOIN Images ON Posts.post_id = Images.post_id WHERE Posts.post_id = ${post_id}`,
+      function (err, results, fields) {
+        if (err) throw err;
 
+        for (var i in results) {
+          //console.log(results[i].image_url);
+          if (results[i].image_url !== null) {
+            results[i].image_url = new URL(
+              results[i].image_url,
+              "http://localhost:4000/images/"
+            ).href;
+            //console.log(results[i].image_url);
+          } else {
+            results[i].image_url = "https://img.icons8.com/ios/100/image.png";
+          }
+        }
+
+        res.status(200).json({ message: "Selected", response: results });
+      }
+    );
+  } catch (err) {
+    // If there was any errors with one of the queries, then just return a failed login to the user
+    res.status(401).json({ message: "Error in retrieving posts" });
+    console.log(err);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

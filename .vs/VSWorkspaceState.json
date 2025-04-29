@@ -6,8 +6,10 @@
     "\\src",
     "\\src\\components",
     "\\src\\components\\authentication",
+    "\\src\\components\\common",
     "\\src\\components\\crud",
-    "\\src\\components\\home"
+    "\\src\\components\\home",
+    "\\src\\images"
   ],
   "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false

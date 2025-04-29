@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
@@ -10,6 +10,7 @@ import {
   message,
 } from "antd";
 import { UploadOutlined, DollarOutlined } from "@ant-design/icons";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import Cookies from "js-cookie";
 
 const { TextArea } = Input;
@@ -17,21 +18,26 @@ const { Option } = Select;
 
 const AddPost = () => {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
 
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    values["session_id"] = Cookies.get("Session_ID");
+    const formData = new FormData();
+    formData.append("session_id", Cookies.get("Session_ID"));
+    formData.append("title", values.title);
+    formData.append("price", values.price);
+    formData.append("category", values.category);
+    formData.append("description", values.description);
 
-    values["images"] = "";
+    if (fileList.length > 0) {
+      formData.append("images", fileList[0].originFileObj); // Add the image file
+    }
 
     try {
       const response = await fetch("http://localhost:4000/post", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values), // Send the form data (username and password)
+        body: formData,
       });
 
       const data = await response.json();
@@ -50,13 +56,14 @@ const AddPost = () => {
   };
 
   const onCancel = () => {
-    form.resetFields();
+    //form.resetFields();
+    navigate("/");
   };
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
       <h1 style={{ textAlign: "center", fontSize: "2rem", fontWeight: "bold" }}>
-        Kickstart Your Sales
+        Create a New Post
       </h1>
 
       <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -108,16 +115,26 @@ const AddPost = () => {
         </Form.Item>
 
         <Form.Item
-          label="Upload Image(s)"
+          label="Upload Image"
           name="images"
           valuePropName="fileList"
           getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
         >
           <Upload
             name="images"
+            accept=".png, .jpg"
             listType="picture"
+            maxCount={1}
             beforeUpload={() => false}
-            multiple
+            fileList={fileList}
+            onChange={({ fileList }) => {
+              // Ensure each file has originFileObj
+              const updatedList = fileList.map((file) => ({
+                ...file,
+                originFileObj: file.originFileObj || file,
+              }));
+              setFileList(updatedList);
+            }}
           >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
@@ -129,8 +146,11 @@ const AddPost = () => {
           rules={[{ required: true, message: "Please select a category" }]}
         >
           <Select placeholder="Select a category">
-            <Option value="electronics">Clothes</Option>
+            <Option value="clothes">Clothes</Option>
+            <Option value="electronics">Electronics</Option>
             <Option value="books">Books</Option>
+            <Option value="furniture">Furniture</Option>
+            <Option value="other">Other</Option>
           </Select>
         </Form.Item>
 

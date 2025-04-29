@@ -11,10 +11,7 @@ import {
   Button,
   message,
 } from "antd";
-<<<<<<< Updated upstream
-=======
-import { Link } from 'react-router-dom';
->>>>>>> Stashed changes
+import { Link } from "react-router-dom";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import './main.css';
@@ -41,7 +38,7 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 const Main = () => {
   const [data, setData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("1"); // Default filter
+  const [selectedFilter, setSelectedFilter] = useState("3"); // Default filter
 
   useEffect(() => {
     const getPosts = async () => {
@@ -57,7 +54,6 @@ const Main = () => {
 
         console.log(message.response);
 
-<<<<<<< Updated upstream
         setData(message.response);
         console.log(data);
       } catch (error) {
@@ -65,27 +61,28 @@ const Main = () => {
       }
     };
     getPosts();
-  }, []);
-=======
-                setData(message.response);
-                console.log(data);
-            } catch (error) {
-                message.error("Unable to connect to server");
-            }
-        };
-        getPosts();
-    }, []);
->>>>>>> Stashed changes
+  }, []);// Don't remove these brackets even though it has squiggly lines under it
 
   const handleFilterChange = (e) => {
     setSelectedFilter(e.key);
   };
 
+  const { SubMenu } = Menu;
+
   const filterMenu = (
     <Menu onClick={handleFilterChange}>
-      <Menu.Item key="1">Price: Low to High</Menu.Item>
-      <Menu.Item key="2">Price: High to Low</Menu.Item>
-      <Menu.Item key="3">Newest</Menu.Item>
+      <SubMenu title="Price">
+        <Menu.Item key="1">Low to High</Menu.Item>
+        <Menu.Item key="2">High to Low</Menu.Item>
+      </SubMenu>
+      <SubMenu title="Category">
+        <Menu.Item key="clothes">Clothes</Menu.Item>
+        <Menu.Item key="electronics">Electronics</Menu.Item>
+        <Menu.Item key="books">Books</Menu.Item>
+        <Menu.Item key="furniture">Furniture</Menu.Item>
+        <Menu.Item key="other">Other</Menu.Item>
+      </SubMenu>
+      <Menu.Item key="3">Reset Filters</Menu.Item>
     </Menu>
   );
 
@@ -102,6 +99,21 @@ const Main = () => {
     console.log(data);
     console.log(BlankData);
     filteredData = data
+      // Category filter (clothes)
+      .filter((item) => {
+        if (selectedFilter === "clothes") {
+          return item.category === "clothes";
+        } else if (selectedFilter === "electronics") {
+          return item.category === "electronics";
+        } else if (selectedFilter === "books") {
+          return item.category === "books";
+        } else if (selectedFilter === "furniture") {
+          return item.category === "furniture";
+        } else if (selectedFilter === "other") {
+          return item.category === "other";
+        }
+        return true; // No category filter applied
+      })
       .filter(
         (item) =>
           !searchQuery ||
@@ -158,39 +170,59 @@ const Main = () => {
         </Dropdown>
       </div>
 
-<<<<<<< Updated upstream
       <Row gutter={[24, 24]}>
         {filteredData.length > 0 ? (
           filteredData.map((item) => (
             <Col key={item.id} xs={24} sm={12} md={8}>
-              <Card
-                hoverable
-                cover={
-                  <div
-                    style={{
-                      height: 150,
-                      backgroundColor: "#ccc",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
+              <Link to={"/info/" + item.post_id}>
+                <Card
+                  hoverable
+                  cover={
+                    <div
+                      style={{
+                        height: 150,
+                        backgroundColor: "#ccc",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        alt="placeholder"
+                        src={item.image_url}
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          opacity: 0.75,
+                        }}
+                      />
+                    </div>
+                  }
+                >
+                  <Space
+                    direction="vertical"
+                    size={4}
+                    style={{ width: "100%" }}
                   >
-                    <img
-                      alt="placeholder"
-                      src="https://img.icons8.com/ios/100/image.png"
-                      style={{ width: 50, opacity: 0.5 }}
-                    />
-                  </div>
-                }
-              >
-                <Space direction="vertical" size={4}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    {item.name} • {formatter.format(new Date(item.created_at))}
-                  </Text>
-                  <Text strong>{item.post_title}</Text>
-                  <Text type="secondary">{item.description}</Text>
-                </Space>
-              </Card>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {item.name} •{" "}
+                      {formatter.format(new Date(item.created_at))}
+                    </Text>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text strong>{item.post_title}</Text>
+                      <Text strong>${item.price}</Text>
+                    </div>
+
+                    <Text type="secondary">{item.description}</Text>
+                  </Space>
+                </Card>
+              </Link>
             </Col>
           ))
         ) : (
@@ -210,60 +242,6 @@ const Main = () => {
       </Row>
     </div>
   );
-=======
-            <Row gutter={[24, 24]}>
-                {filteredData.length > 0 ? (
-                    filteredData.map((item) => (
-                        <Col key={item.id} xs={24} sm={12} md={8}>
-                            <Card
-                                hoverable
-                                cover={
-                                    <div
-                                        style={{
-                                            height: 150,
-                                            backgroundColor: "#ccc",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <img
-                                            alt="placeholder"
-                                            src={item.image_url}
-                                            style={{ maxWidth: "100%", maxHeight: "100%", opacity: 0.75 }}
-                                        />
-                                    </div>
-                                }
-                            >
-                                <Space direction="vertical" size={4}>
-                                    <Text type="secondary" style={{ fontSize: 12 }}>
-                                        {item.name} • {formatter.format(new Date(item.created_at))}
-                                    </Text>
-                                    <Text strong>{item.post_title}</Text>
-                                    <Text type="secondary">{item.description}</Text>
-                                </Space>
-                            </Card>
-                        </Col>
-                    ))
-                ) : (
-                    <Col span={24}>
-                        <Text
-                            type="secondary"
-                            style={{
-                                display: "block",
-                                textAlign: "center",
-                                marginTop: "2rem",
-                            }}
-                        >
-                            No items found.
-                        </Text>
-                    </Col>
-                )}
-            </Row>
-        </div>
-      </div>
-    );
->>>>>>> Stashed changes
 };
 
 export default Main;
