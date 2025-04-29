@@ -11,7 +11,6 @@ import Profile from './components/crud/Profile';
 
 function AppRoutes() {
   const location = useLocation();
-
   return (
     <>
       <Routes>

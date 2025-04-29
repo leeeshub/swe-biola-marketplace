@@ -5,8 +5,12 @@
     "\\public",
     "\\src",
     "\\src\\components",
-    "\\src\\components\\authentication"
+    "\\src\\components\\authentication",
+    "\\src\\components\\common",
+    "\\src\\components\\crud",
+    "\\src\\components\\home",
+    "\\src\\images"
   ],
-  "SelectedNode": "\\.gitignore",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }
