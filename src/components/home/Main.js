@@ -14,6 +14,8 @@ import {
 import { Link } from "react-router-dom";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
+import './main.css';
+import Header from '../common/Header';
 
 const { Meta } = Card;
 const { Title, Text } = Typography;
@@ -59,7 +61,7 @@ const Main = () => {
       }
     };
     getPosts();
-  }, []); // Don't remove these brackets even though it has squiggly lines under it
+  }, []);// Don't remove these brackets even though it has squiggly lines under it
 
   const handleFilterChange = (e) => {
     setSelectedFilter(e.key);
@@ -130,16 +132,21 @@ const Main = () => {
       });
   }
 
-  if (filteredData === null) {
-    return <div> Loading...</div>;
-  }
-  return (
-    <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
-      <Title level={2} style={{ textAlign: "center" }}>
-        Welcome to
-        <br />
-        <strong>Biola Marketplace</strong>
-      </Title>
+    if (filteredData === null) {
+        return <div> Loading...</div>;
+    }
+    return (
+      <div>
+        <Header/>
+        <div className="circle-bg circle-1"></div>
+        <div className="circle-bg circle-2"></div>
+        <div className="circle-bg circle-3"></div>
+        <div style={{ padding: "2rem", maxWidth: 1200, margin: "0 auto" }}>
+            <Title level={2} style={{ textAlign: "center" }}>
+                Welcome to
+                <br />
+                <strong>Biola Marketplace</strong>
+            </Title>
 
       <div
         style={{
