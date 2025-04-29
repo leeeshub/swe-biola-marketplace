@@ -11,11 +11,8 @@ import Profile from './components/crud/Profile';
 
 function AppRoutes() {
   const location = useLocation();
-  const hideHeader = location.pathname === "/login" || location.pathname === "/signup";
-
   return (
     <>
-      {!hideHeader && <Header />}
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="login" element={<Login />} />
