@@ -195,8 +195,6 @@ const EditPost = () => {
                 </Form.Item>
             </Form>
         </div>
-
-        <Footer/>
     </>
     );
 };
