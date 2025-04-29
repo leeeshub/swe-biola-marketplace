@@ -22,3 +22,87 @@
   z-index: 1000;
   background-color: transparent;
 }
+
+/* --------- footer ------------ */
+.footer-menu-link {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-container {
+  background-color: #232323;
+  color: white;
+  padding: 20px;
+  height: 270px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 120px;
+}
+
+.footer-links {
+  text-align: left;
+  font-size: 1.15rem;
+  font-weight: 550;
+}
+
+.footer-links h3 {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-links p {
+  margin-bottom: 0;
+}
+
+.footer-divider {
+  margin: 0 20px;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.social-icons h3 {
+  margin-right: 20px;
+}
+
+.social-icon {
+  margin: 0 15px;
+  color: white;
+  font-size: 28px;
+}
+
+hr {
+  margin-top: 0;
+  height: 1px;
+  width: 100%;
+  background-color: white;
+}
+
+.copyright {
+  font-size: 13px;
+  margin: 25px 0;
+}
+
+.footer-logo {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.icons {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
